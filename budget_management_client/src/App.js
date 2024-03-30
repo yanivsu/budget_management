@@ -1,6 +1,7 @@
 import "./App.css";
 import { DashboardComponent } from "./components/DashboardComponent";
 import { TableComponent } from "./components/TableComponent";
+import TransactionForm from "./components/TransactionForm";
 // import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 // TODO create a logo for the app
@@ -11,6 +12,7 @@ function App() {
       {/*<DashboardComponent />*/}
       {/*<TableComponent transactions={transactions} />*/}
       <TableComponent />
+      {/*<TransactionForm />*/}
     </div>
     // <Router>
     //     <Switch>
