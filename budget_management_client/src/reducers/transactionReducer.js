@@ -7,43 +7,7 @@ import {
 } from "../actions/transactionAction";
 
 const initialState = {
-  allTransactions: [
-    {
-      transaction_id: 1,
-      transaction_name: "bit",
-      amount: 200,
-      type: "income",
-      date: "2024-03-27T22:00:00.000Z",
-    },
-    {
-      transaction_id: 2,
-      transaction_name: "paypal",
-      amount: 5000,
-      type: "income",
-      date: "2024-03-27T22:00:00.000Z",
-    },
-    {
-      transaction_id: 3,
-      transaction_name: "payffffpal",
-      amount: 235,
-      type: "income",
-      date: "2024-03-27T22:00:00.000Z",
-    },
-    {
-      transaction_id: 4,
-      transaction_name: "coffee",
-      amount: 25,
-      type: "expense",
-      date: "2024-03-27T22:00:00.000Z",
-    },
-    {
-      transaction_id: 5,
-      transaction_name: "TV",
-      amount: 2055,
-      type: "expense",
-      date: "2024-03-27T22:00:00.000Z",
-    },
-  ],
+  allTransactions: [],
   filteredTransactions: [],
   currentFilter: "all",
   // showExpense: false,
@@ -55,17 +19,17 @@ const transactionReducer = (state = initialState, action) => {
     case GET_ALL_TRANSACTIONS:
       return {
         ...state,
-        filteredTransactions: state.allTransactions,
+        // allTransactions: action.payload, // update allTransactions with the payload
+        // TODO fixed all transactions to support filtering.
+        filteredTransactions: action.payload,
+        allTransactions: state.filteredTransactions,
+        // allTransactions: action.payload, // update allTransactions with the payload
+        // allTransactions: state.allTransactions, // update allTransactions with the payload
+        // filteredTransactions: state.filteredTransactions,
       };
     //   TODO should change with new transaction from form
     case ADD_TRANSACTION:
-      const newTransaction = {
-        transaction_id: 10,
-        transaction_name: "test",
-        amount: 2030,
-        type: "income",
-        date: "2024-03-27T22:00:00.000Z",
-      };
+      const newTransaction = {};
       return {
         ...state,
         allTransactions: [...state.allTransactions, newTransaction],
@@ -76,9 +40,11 @@ const transactionReducer = (state = initialState, action) => {
       };
 
     case SHOW_INCOME:
+      console.log(action.payload);
       return {
         ...state,
         currentFilter: "income",
+
         filteredTransactions: state.allTransactions.filter(
           (transaction) => transaction.type === "income",
         ),

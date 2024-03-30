@@ -8,6 +8,7 @@ import {
   SHOW_INCOME,
   SHOW_EXPENSE,
   ADD_TRANSACTION,
+  getAllTransactions,
 } from "../actions/transactionAction";
 
 // component that shows all transaction
@@ -16,7 +17,8 @@ export const TableComponent = () => {
 
   // load all the transactions initially when the component is mounted
   useEffect(() => {
-    dispatch({ type: GET_ALL_TRANSACTIONS });
+    console.log("enteredUseEffect");
+    dispatch(getAllTransactions());
   }, []);
 
   // subscribe the component to the store and pass to it the latest state.
@@ -46,7 +48,7 @@ export const TableComponent = () => {
     } else if (value === "3") {
       dispatch({ type: SHOW_EXPENSE });
     } else {
-      dispatch({ type: GET_ALL_TRANSACTIONS });
+      dispatch(getAllTransactions());
     }
   };
   const addTransactionHandler = () => {
