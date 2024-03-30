@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 app.use(express.json());
 const budgetRoutes = require("./routes/budget.route");
@@ -8,10 +8,8 @@ require("dotenv").config();
 app.use(cors());
 app.options("*", cors());
 
-
 // setup the express server router
 app.use("/budget", budgetRoutes);
-
 
 // app.listen(process.env.PORT);
 // console.log(`Listening on port:${process.env.PORT}`);

@@ -1,5 +1,5 @@
-const budgetController = require('../controllers/budget.controller');
-const express = require('express');
+const budgetController = require("../controllers/budget.controller");
+const express = require("express");
 const router = express.Router();
 
 router.post("/createTransaction", budgetController.createTransaction);

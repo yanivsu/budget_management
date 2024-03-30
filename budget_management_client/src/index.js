@@ -1,20 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './index.css';
-import App from './App';
-import {DevSupport} from "@react-buddy/ide-toolbox";
-import {ComponentPreviews, useInitial} from "./dev";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
+import App from "./App";
+import { DevSupport } from "@react-buddy/ide-toolbox";
+import { ComponentPreviews, useInitial } from "./dev";
+import { Provider } from "react-redux";
+import transactionStore from "./store/actions/TransactionStore";
+import store from "./store/actions/TransactionStore";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <React.StrictMode>
-        <DevSupport ComponentPreviews={ComponentPreviews}
-                    useInitialHook={useInitial}
-        >
-            <App/>
-        </DevSupport>
-    </React.StrictMode>
+  <React.StrictMode>
+    <DevSupport
+      ComponentPreviews={ComponentPreviews}
+      useInitialHook={useInitial}
+    >
+      <Provider store={store}>
+        <App />
+      </Provider>
+      ,
+    </DevSupport>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
