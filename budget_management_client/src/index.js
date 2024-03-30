@@ -6,8 +6,8 @@ import App from "./App";
 import { DevSupport } from "@react-buddy/ide-toolbox";
 import { ComponentPreviews, useInitial } from "./dev";
 import { Provider } from "react-redux";
-import transactionStore from "./store/actions/TransactionStore";
-import store from "./store/actions/TransactionStore";
+import transactionStore from "./store/transactionStore";
+import store from "./store/transactionStore";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

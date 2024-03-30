@@ -3,28 +3,31 @@ import Form from "react-bootstrap/Form";
 import { Button, ButtonGroup, ToggleButton } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import {getAllTransactions} from '../actions/TransactionAction'
+import {
+  GET_ALL_TRANSACTIONS,
+  SHOW_INCOME,
+  SHOW_EXPENSE,
+  ADD_TRANSACTION,
+} from "../actions/transactionAction";
 
 // component that shows all transaction
-// export const TableComponent = ({ transactions }) => {
 export const TableComponent = () => {
   const dispatch = useDispatch();
-  // subsribe the component to the store and pass to it it's latest state.
+
+  // load all the transactions initially when the component is mounted
+  useEffect(() => {
+    dispatch({ type: GET_ALL_TRANSACTIONS });
+  }, []);
+
+  // subscribe the component to the store and pass to it the latest state.
   const tsStore = useSelector((state) => state.filteredTransactions);
 
-  const getTrsHandler = () => {
-    dispatch({ type: "getAllTransactions" });
-    console.log(tsStore);
-  };
-  const addTransactionHandler = () => {
-    dispatch({ type: "addTransaction" });
-  };
-  const payloadObject = {};
-  const addWithPayloadHandler = () => {
-    dispatch({ type: "addWithPayload", payload: payloadObject });
-  };
+  // const payloadObject = {};
+  // const addWithPayloadHandler = () => {
+  //   dispatch({ type: "addWithPayload", payload: payloadObject });
+  // };
 
-  /*** selected all/income/expense section ***/
+  /*** selected all/income/expense  ***/
   const [selectedRows, setSelectedRows] = useState([]);
   const [radioValue, setRadioValue] = useState("1");
 
@@ -33,19 +36,28 @@ export const TableComponent = () => {
     { name: "Income", value: "2" },
     { name: "Expense", value: "3" },
   ]; //
+
+  /*** Handlers ***/
+
   const handleRadioChange = (value) => {
     setRadioValue(value);
     if (value === "2") {
-      dispatch({ type: "showIncome" });
+      dispatch({ type: SHOW_INCOME });
     } else if (value === "3") {
-      dispatch({ type: "showExpense" });
+      dispatch({ type: SHOW_EXPENSE });
     } else {
-      dispatch({ type: "getAllTransactions" });
+      dispatch({ type: GET_ALL_TRANSACTIONS });
     }
   };
-  /*** selected all/income/expense section ***/
+  const addTransactionHandler = () => {
+    dispatch({ type: ADD_TRANSACTION });
+  };
 
-  /******* functions *******/
+  const getTrsHandler = () => {
+    dispatch({ type: GET_ALL_TRANSACTIONS });
+    console.log(tsStore);
+  };
+
   // handleSelectedRow hold only the id's of the selected rows
   const handleSelectedRow = (id) => {
     setSelectedRows((prevState) => {
@@ -56,7 +68,10 @@ export const TableComponent = () => {
       }
     });
   };
+
   /******* functions *******/
+
+  // TODO when clicking a row, should open a info- view of the record
   return (
     <>
       {/****buttons****/}
@@ -134,21 +149,3 @@ export const TableComponent = () => {
     </>
   );
 };
-
-// const [ts, setTs] = useState({})
-//
-// // get all the transactions and set them in the transaction state
-// // run only once at mount
-// useEffect(() => {
-//     const fetchTransactions = async () => {
-//         const allTransactions = await getAllTransactions();
-//         if (allTransactions) {
-//             setTs(allTransactions);
-//             console.log(allTransactions);
-//         } else {
-//             console.log('No transactions returned');
-//         }
-//     };
-//
-//     fetchTransactions();
-// }, []);
