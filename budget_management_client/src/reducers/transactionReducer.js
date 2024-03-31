@@ -4,6 +4,7 @@ import {
   ADD_WITH_PAYLOAD,
   SHOW_INCOME,
   SHOW_EXPENSE,
+  SHOW_ALL_TRANSACTIONS,
 } from "../actions/transactionAction";
 
 const initialState = {
@@ -14,7 +15,7 @@ const initialState = {
   // showIncome: false,
 };
 
-const transactionReducer = (state = initialState, action) => {
+export const transactionReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_TRANSACTIONS:
       return {
@@ -26,6 +27,14 @@ const transactionReducer = (state = initialState, action) => {
         // allTransactions: action.payload, // update allTransactions with the payload
         // allTransactions: state.allTransactions, // update allTransactions with the payload
         // filteredTransactions: state.filteredTransactions,
+      };
+    case SHOW_ALL_TRANSACTIONS:
+      return {
+        ...state,
+        // allTransactions: action.payload, // update allTransactions with the payload
+        // TODO fixed all transactions to support filtering.
+        // filteredTransactions: action.payload,
+        allTransactions: state.filteredTransactions,
       };
     //   TODO should change with new transaction from form
     case ADD_TRANSACTION:
@@ -78,5 +87,3 @@ const transactionReducer = (state = initialState, action) => {
       return state;
   }
 };
-
-export default transactionReducer;

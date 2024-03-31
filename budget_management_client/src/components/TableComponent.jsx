@@ -7,27 +7,27 @@ import {
   GET_ALL_TRANSACTIONS,
   SHOW_INCOME,
   SHOW_EXPENSE,
-  ADD_TRANSACTION,
+  SHOW_ALL_TRANSACTIONS,
   getAllTransactions,
 } from "../actions/transactionAction";
 
+import { useNavigate } from "react-router-dom";
+
 // component that shows all transaction
 export const TableComponent = () => {
+  let navigate = useNavigate();
   const dispatch = useDispatch();
 
   // load all the transactions initially when the component is mounted
   useEffect(() => {
-    console.log("enteredUseEffect");
+    console.log("First call for data when component was mounted");
     dispatch(getAllTransactions());
   }, []);
 
   // subscribe the component to the store and pass to it the latest state.
-  const tsStore = useSelector((state) => state.filteredTransactions);
-
-  // const payloadObject = {};
-  // const addWithPayloadHandler = () => {
-  //   dispatch({ type: "addWithPayload", payload: payloadObject });
-  // };
+  const tsStore = useSelector(
+    (state) => state.transactions.filteredTransactions,
+  );
 
   /*** selected all/income/expense  ***/
   const [selectedRows, setSelectedRows] = useState([]);
@@ -48,11 +48,14 @@ export const TableComponent = () => {
     } else if (value === "3") {
       dispatch({ type: SHOW_EXPENSE });
     } else {
-      dispatch(getAllTransactions());
+      // TODO change this just to show all transactions
+      // dispatch(getAllTransactions());
+      dispatch({ type: SHOW_ALL_TRANSACTIONS });
     }
   };
   const addTransactionHandler = () => {
-    dispatch({ type: ADD_TRANSACTION });
+    navigate("/transaction");
+    // dispatch({ type: ADD_TRANSACTION });
   };
 
   const getTrsHandler = () => {
@@ -91,8 +94,9 @@ export const TableComponent = () => {
       >
         Remove Selected
       </Button>
+      {/*TODO can edit only if one transaction is selected!*/}
       <Button size="sm" onClick={getTrsHandler}>
-        Get Transaction{" "}
+        Edit Transaction{" "}
       </Button>
       {/****buttons****/}
       <div style={{ display: "flex", justifyContent: "center" }}>

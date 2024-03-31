@@ -79,7 +79,7 @@ export default function TransactionForm() {
             This field is required
           </Form.Control.Feedback>
         </Form.Group>
-
+        {/*TODO add arrow dropdown*/}
         <Form.Group controlId="type">
           <Form.Label>Type:</Form.Label>
           <Form.Control as="select" {...register("type", { required: true })}>
