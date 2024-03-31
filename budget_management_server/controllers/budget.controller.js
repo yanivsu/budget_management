@@ -30,10 +30,11 @@ exports.getAllTransactions = async (req, res, next) => {
   }
 };
 
-exports.getAllIncomeTransactions = async (req, res, next) => {
+exports.getUserAuth = async (req, res, next) => {
   try {
-    const transactions = await BudgetService.getAllIncomesService();
-    return res.status(200).send({ transactions });
+    console.log("entered controller");
+    const auth = await BudgetService.getUserAuthService(req.body);
+    return res.status(200).send({ auth });
   } catch (err) {
     res.status(400).json({ Error: err.message });
     next(err);
@@ -41,13 +42,24 @@ exports.getAllIncomeTransactions = async (req, res, next) => {
   }
 };
 
-exports.getAllExpenseTransactions = async (req, res, next) => {
-  try {
-    const transactions = await BudgetService.getAllExpensesService();
-    return res.status(200).send({ transactions });
-  } catch (err) {
-    res.status(400).json({ Error: err.message });
-    next(err);
-    return err;
-  }
-};
+// exports.getAllIncomeTransactions = async (req, res, next) => {
+//   try {
+//     const transactions = await BudgetService.getAllIncomesService();
+//     return res.status(200).send({ transactions });
+//   } catch (err) {
+//     res.status(400).json({ Error: err.message });
+//     next(err);
+//     return err;
+//   }
+// };
+//
+// exports.getAllExpenseTransactions = async (req, res, next) => {
+//   try {
+//     const transactions = await BudgetService.getAllExpensesService();
+//     return res.status(200).send({ transactions });
+//   } catch (err) {
+//     res.status(400).json({ Error: err.message });
+//     next(err);
+//     return err;
+//   }
+// };

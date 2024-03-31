@@ -4,6 +4,8 @@ const db = require("../config/db");
 
 // Call the function to get the connection object
 
+// authenticate user
+
 // create new transaction
 exports.createNewTransaction = async (transaction) => {
   const { transaction_name, amount, type, date } = transaction;
@@ -46,32 +48,32 @@ exports.getAllTransactions = async () => {
 
 // TODO fix get all incomed and expenses
 // get all income transactions
-exports.getAllIncomes = async () => {
-  return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM transactions WHERE type = "income"';
-    db.query(sql, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-};
-// get all expense transactions
-
-exports.getAllExspenses = async () => {
-  return new Promise((resolve, reject) => {
-    const sql = 'SELECT * FROM transactions WHERE type = "expense"';
-    db.query(sql, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-};
+// exports.getAllIncomes = async () => {
+//   return new Promise((resolve, reject) => {
+//     const sql = 'SELECT * FROM transactions WHERE type = "income"';
+//     db.query(sql, (err, results) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(results);
+//       }
+//     });
+//   });
+// };
+// // get all expense transactions
+//
+// exports.getAllExspenses = async () => {
+//   return new Promise((resolve, reject) => {
+//     const sql = 'SELECT * FROM transactions WHERE type = "expense"';
+//     db.query(sql, (err, results) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(results);
+//       }
+//     });
+//   });
+// };
 
 // const Transaction = {
 //     create: (transaction, callback) => {
