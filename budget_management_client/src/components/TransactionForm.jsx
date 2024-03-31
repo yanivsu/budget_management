@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Container, Button, Form, Row } from "react-bootstrap";
 import { addTransaction } from "../actions/transactionAction";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 export default function TransactionForm() {
+  let navigate = useNavigate();
+
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -15,11 +20,17 @@ export default function TransactionForm() {
   } = useForm();
 
   const onSubmit = (data) => {
+    setLoading(true);
     console.log(data);
     dispatch(addTransaction(data));
+    setTimeout(() => {
+      navigate("/table");
+      setLoading(false);
+    }, 1500); // 5000ms delay
   };
 
   const clearForm = () => reset();
+  const goBack = () => navigate("/table");
 
   return (
     <Container
@@ -82,7 +93,18 @@ export default function TransactionForm() {
         </Form.Group>
         <div className="d-flex justify-content-center">
           <Button className="mt-2 " variant="primary" size="sm" type="submit">
-            Submit
+            {loading ? (
+              <Spinner
+                className="me-2"
+                as="span"
+                animation="border"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+              />
+            ) : (
+              "Submit"
+            )}
           </Button>
           <Button
             className="mt-2 mx-2 "
@@ -92,6 +114,16 @@ export default function TransactionForm() {
             onClick={clearForm}
           >
             Clear
+          </Button>
+          <Button
+            className="mt-2 "
+            variant="primary"
+            size="sm"
+            type="button"
+            // onClick={navigate("/table")}
+            onClick={goBack}
+          >
+            Go back
           </Button>
         </div>
       </Form>
