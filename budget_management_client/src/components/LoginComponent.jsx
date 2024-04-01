@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import { checkCredentials } from "../actions/userActions";
 // TODO fix spinner when auth failed and show some message that it failed
-export const Login = () => {
+export const LoginComponent = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
   const isValidUser = useSelector((state) => state.user.isValidUser);

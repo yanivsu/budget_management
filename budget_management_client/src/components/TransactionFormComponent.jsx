@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 
-export default function TransactionForm() {
+export default function TransactionFormComponent() {
   let navigate = useNavigate();
 
   const dispatch = useDispatch();

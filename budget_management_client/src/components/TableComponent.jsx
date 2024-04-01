@@ -100,7 +100,6 @@ export const TableComponent = () => {
       </Button>
       {/****buttons****/}
       <div style={{ display: "flex", justifyContent: "center" }}>
-        {/*<div>*/}
         {/*<ButtonGroup className="d-flex justify-content-center">*/}
         <ButtonGroup className="my-2">
           {radios.map((radio, idx) => (
@@ -135,7 +134,12 @@ export const TableComponent = () => {
           {/*maps over hardcoded data*/}
           {tsStore.map((transaction) => (
             // {transactions.transactions.map((transaction) => (
-            <tr key={transaction.transaction_id}>
+            <tr
+              key={transaction.transaction_id}
+              onClick={() =>
+                console.log(`Row ${transaction.transaction_id} was clicked`)
+              }
+            >
               <td>
                 <Form.Check
                   type="checkbox"
