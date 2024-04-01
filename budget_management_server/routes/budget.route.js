@@ -10,7 +10,10 @@ router.post(
   BudgetController.createTransaction,
 );
 router.get("/getAllTransactions", BudgetController.getAllTransactions);
-router.post("/userAuth/auth", BudgetController.getUserAuth);
+router.post("/deleteTransaction", BudgetController.deleteTransactionsByIds);
+router.get("/editTransaction", BudgetController.editTransactionById);
+
+// router.post("/userAuth/auth", BudgetController.getUserAuth);
 // router.get("/getAllIncomes", BudgetController.getAllIncomeTransactions);
 // router.get("/getAllExpenses", BudgetController.getAllExpenseTransactions);
 module.exports = router;

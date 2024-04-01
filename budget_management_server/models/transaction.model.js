@@ -20,10 +20,10 @@ exports.createNewTransaction = async (transaction) => {
   });
 };
 
-exports.deleteTransactionById = (transaction_id) => {
+exports.deleteTransactionsByIds = (transaction_ids) => {
   return new Promise((resolve, reject) => {
-    const sql = "DELETE FROM transactions WHERE transaction_id = ?";
-    db.query(sql, [transaction_id], (err, result) => {
+    const sql = `DELETE FROM transactions WHERE transaction_id IN (?)`;
+    db.query(sql, [transaction_ids], (err, result) => {
       if (err) {
         console.log(err);
         reject(err);

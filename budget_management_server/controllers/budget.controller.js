@@ -29,18 +29,18 @@ exports.getAllTransactions = async (req, res, next) => {
   }
 };
 // Delete transaction by transaction ID
-exports.deleteTransactionById = async (req, res, next) => {
+exports.deleteTransactionsByIds = async (req, res, next) => {
   try {
-    const transactionId = req.body.transactionId;
+    const transactionIds = req.body.transactionIds;
     const affectedRows =
-      await BudgetService.deleteTransactionByIdService(transactionId);
+      await BudgetService.deleteTransactionsByIdsService(transactionIds);
     if (affectedRows === 0) {
-      // No rows were deleted, so the transactionId must not exist
-      res.status(404).json({ message: "Transaction not found" });
+      // No rows were deleted, so the transactionIds must not exist
+      res.status(404).json({ message: "Transactions not found" });
       return;
     } else {
-      // The transaction was successfully deleted
-      res.status(200).json({ message: "Transaction successfully deleted" });
+      // The transactions were successfully deleted
+      res.status(200).json({ message: "Transactions successfully deleted" });
       return;
     }
   } catch (err) {
