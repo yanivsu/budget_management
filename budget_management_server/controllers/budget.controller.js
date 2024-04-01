@@ -3,11 +3,10 @@
 // Import the Budget Service
 const BudgetService = require("../services/budget.service");
 
-// create new transaction
+// Create new transaction
 exports.createTransaction = async (req, res, next) => {
   try {
     const transaction = req.body;
-    // const { name, amount, type, date } = income;
     const newTransaction =
       await BudgetService.createTransactionService(transaction);
 
@@ -18,7 +17,7 @@ exports.createTransaction = async (req, res, next) => {
     return err;
   }
 };
-
+// Get all transaction Controller
 exports.getAllTransactions = async (req, res, next) => {
   try {
     const transactions = await BudgetService.getAllTransactionsService();
@@ -29,12 +28,21 @@ exports.getAllTransactions = async (req, res, next) => {
     return err;
   }
 };
-
-exports.getUserAuth = async (req, res, next) => {
+// Delete transaction by transaction ID
+exports.deleteTransactionById = async (req, res, next) => {
   try {
-    console.log("entered controller");
-    const auth = await BudgetService.getUserAuthService(req.body);
-    return res.status(200).send({ auth });
+    const transactionId = req.body.transactionId;
+    const affectedRows =
+      await BudgetService.deleteTransactionByIdService(transactionId);
+    if (affectedRows === 0) {
+      // No rows were deleted, so the transactionId must not exist
+      res.status(404).json({ message: "Transaction not found" });
+      return;
+    } else {
+      // The transaction was successfully deleted
+      res.status(200).json({ message: "Transaction successfully deleted" });
+      return;
+    }
   } catch (err) {
     res.status(400).json({ Error: err.message });
     next(err);
@@ -42,24 +50,14 @@ exports.getUserAuth = async (req, res, next) => {
   }
 };
 
-// exports.getAllIncomeTransactions = async (req, res, next) => {
-//   try {
-//     const transactions = await BudgetService.getAllIncomesService();
-//     return res.status(200).send({ transactions });
-//   } catch (err) {
-//     res.status(400).json({ Error: err.message });
-//     next(err);
-//     return err;
-//   }
-// };
-//
-// exports.getAllExpenseTransactions = async (req, res, next) => {
-//   try {
-//     const transactions = await BudgetService.getAllExpensesService();
-//     return res.status(200).send({ transactions });
-//   } catch (err) {
-//     res.status(400).json({ Error: err.message });
-//     next(err);
-//     return err;
-//   }
-// };
+// Edit transaction by transaction ID
+exports.editTransactionById = async (req, res, next) => {
+  try {
+    const transactions = await BudgetService.editTransactionByIdService();
+    return res.status(200).send({ transactions });
+  } catch (err) {
+    res.status(400).json({ Error: err.message });
+    next(err);
+    return err;
+  }
+};
