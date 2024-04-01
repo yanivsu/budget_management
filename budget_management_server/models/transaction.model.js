@@ -20,6 +20,53 @@ exports.createNewTransaction = async (transaction) => {
   });
 };
 
+exports.deleteTransactionById = (transaction_id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "DELETE FROM transactions WHERE transaction_id = ?";
+    db.query(sql, [transaction_id], (err, result) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        console.log(result);
+        resolve(result.affectedRows); // resolve with affectedRows
+      }
+    });
+  });
+};
+
+//
+// const Sequelize = require('sequelize');
+// const sequelize = new Sequelize('database', 'username', 'password', {
+//   host: 'localhost',
+//   dialect: 'mysql'
+// });
+//
+// const Transaction = sequelize.define('transaction', {
+//   type: {
+//     type: Sequelize.STRING
+//   },
+//   amount: {
+//     type: Sequelize.FLOAT
+//   },
+//   date: {
+//     type: Sequelize.DATE
+//   },
+//   transaction_name: {
+//     type: Sequelize.STRING
+//   }
+// });
+//
+// Transaction.sync()
+//     .then(() => {
+//       console.log('Transaction model synced with database');
+//     })
+//     .catch(err => {
+//       console.error('Unable to sync transaction model:', err);
+//     });
+//
+// module.exports = Transaction;
+
 // exports.getAllTransactions = async () => {
 //     const sql = 'SELECT * FROM transactions';
 //     db.query(sql, (err, results) => {
