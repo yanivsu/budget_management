@@ -28,8 +28,47 @@ exports.deleteTransactionsByIds = (transaction_ids) => {
         console.log(err);
         reject(err);
       } else {
-        console.log(result);
+        console.log(result.message);
         resolve(result.affectedRows); // resolve with affectedRows
+      }
+    });
+  });
+};
+
+// updates a transaction only if id was found and the rest of the parameters are optional
+// build a sql query only with the parameters that are provided by the update function
+exports.updateTransaction = (transactionId, name, amount, type, date) => {
+  return new Promise((resolve, reject) => {
+    let updates = [];
+    let params = [];
+
+    if (name !== undefined && name !== null) {
+      updates.push("transaction_name = ?");
+      params.push(name);
+    }
+    if (amount !== undefined && amount !== null) {
+      updates.push("amount = ?");
+      params.push(amount);
+    }
+    if (type !== undefined && type !== null) {
+      updates.push("type = ?");
+      params.push(type);
+    }
+    if (date !== undefined && date !== null) {
+      updates.push("date = ?");
+      params.push(date);
+    }
+    // construct the query with the provide parameters
+    let sql = `UPDATE transactions SET ${updates.join(", ")} WHERE transaction_id = ?`;
+    params.push(transactionId);
+
+    db.query(sql, params, (err, result) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        console.log(result.message);
+        resolve(result); // resolve with the result of the UPDATE operation
       }
     });
   });

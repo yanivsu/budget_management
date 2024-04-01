@@ -1,9 +1,13 @@
 const BudgetModel = require("../models/transaction.model");
 
 // Add a new Transaction
-module.exports.createTransactionService = async (transaction) => {
-  await BudgetModel.createNewTransaction(transaction);
-  // await BudgetModel.create()
+module.exports.createTransactionService = async (
+  transaction_name,
+  amount,
+  type,
+  date,
+) => {
+  await BudgetModel.createNewTransaction(transaction_name, amount, type, date);
   return true;
 };
 
@@ -25,14 +29,22 @@ module.exports.deleteTransactionsByIdsService = async (transactionIds) => {
   return affectedRows;
 };
 
-module.exports.editTransactionByIdService = async () => {
-  const transactions = await BudgetModel.editTransactionByIdModel();
-  if (!transactions) {
-    throw new Error("No Transactions");
-  } else {
-    console.log(`Fetched ${transactions.length} transactions.`);
-    return transactions;
-  }
+module.exports.updateTransactionByIdService = async (transaction) => {
+  const {
+    transaction_id: transactionId,
+    transaction_name: name,
+    amount,
+    date,
+    type,
+  } = transaction;
+  const updatedTransaction = await BudgetModel.updateTransaction(
+    transactionId,
+    name,
+    amount,
+    type,
+    date,
+  );
+  return updatedTransaction.affectedRows;
 };
 
 // Transaction.create({

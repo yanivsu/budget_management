@@ -7,10 +7,11 @@ const BudgetService = require("../services/budget.service");
 exports.createTransaction = async (req, res, next) => {
   try {
     const transaction = req.body;
-    const newTransaction =
-      await BudgetService.createTransactionService(transaction);
+    const transactionAdded = await BudgetService.createTransactionService(
+      transaction
+    );
 
-    return res.status(200).send({ newTransaction });
+    return res.status(200).send({ transactionAdded });
   } catch (err) {
     res.status(400).json({ Error: err.message });
     next(err);
@@ -32,8 +33,9 @@ exports.getAllTransactions = async (req, res, next) => {
 exports.deleteTransactionsByIds = async (req, res, next) => {
   try {
     const transactionIds = req.body.transactionIds;
-    const affectedRows =
-      await BudgetService.deleteTransactionsByIdsService(transactionIds);
+    const affectedRows = await BudgetService.deleteTransactionsByIdsService(
+      transactionIds
+    );
     if (affectedRows === 0) {
       // No rows were deleted, so the transactionIds must not exist
       res.status(404).json({ message: "Transactions not found" });
@@ -51,10 +53,22 @@ exports.deleteTransactionsByIds = async (req, res, next) => {
 };
 
 // Edit transaction by transaction ID
-exports.editTransactionById = async (req, res, next) => {
+exports.updateTransactionById = async (req, res, next) => {
   try {
-    const transactions = await BudgetService.editTransactionByIdService();
-    return res.status(200).send({ transactions });
+    const transaction = req.body;
+
+    const affectedRows = await BudgetService.updateTransactionByIdService(
+      transaction
+    );
+    if (affectedRows === 0) {
+      // No rows were deleted, so the transactionIds must not exist
+      res.status(404).json({ message: "Transaction not found" });
+      return;
+    } else {
+      // The transactions were successfully deleted
+      res.status(200).json({ message: "Transactions successfully updated" });
+      return;
+    }
   } catch (err) {
     res.status(400).json({ Error: err.message });
     next(err);

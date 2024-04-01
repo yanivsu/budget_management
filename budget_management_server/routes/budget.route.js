@@ -2,18 +2,29 @@ const BudgetController = require("../controllers/budget.controller");
 const validation = require("../src/validations/transaction.validation");
 const validateInput = require("../src/middlewares/validate");
 const express = require("express");
+const { valid } = require("joi");
 const router = express.Router();
 
+// route uses a validation of parameters for requests
 router.post(
   "/createTransaction",
   validateInput(validation.createTransaction),
   BudgetController.createTransaction,
 );
 router.get("/getAllTransactions", BudgetController.getAllTransactions);
-router.post("/deleteTransaction", BudgetController.deleteTransactionsByIds);
-router.get("/editTransaction", BudgetController.editTransactionById);
 
-// router.post("/userAuth/auth", BudgetController.getUserAuth);
-// router.get("/getAllIncomes", BudgetController.getAllIncomeTransactions);
-// router.get("/getAllExpenses", BudgetController.getAllExpenseTransactions);
+// route uses validation that requires transaction_id parameter
+router.post(
+  "/deleteTransaction",
+  validateInput(validation.deleteTransaction),
+  BudgetController.deleteTransactionsByIds,
+);
+
+// route uses validation that requires at least transaction_id parameter
+router.put(
+  "/updateTransaction",
+  validateInput(validation.updateTransaction),
+  BudgetController.updateTransactionById,
+);
+
 module.exports = router;
