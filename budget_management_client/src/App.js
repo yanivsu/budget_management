@@ -10,7 +10,6 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 <FontAwesomeIcon icon="fa-solid fa-pen-to-square" />;
 // TODO create a logo for the app
-// TODO login an signup page
 
 function App() {
   return (
