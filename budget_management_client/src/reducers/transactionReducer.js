@@ -1,10 +1,10 @@
 import {
   GET_ALL_TRANSACTIONS,
   ADD_TRANSACTION,
-  ADD_WITH_PAYLOAD,
   SHOW_INCOME,
   SHOW_EXPENSE,
   SHOW_ALL_TRANSACTIONS,
+  DELETE_TRANSACTIONS,
 } from "../actions/transactionAction";
 
 const initialState = {
@@ -66,22 +66,13 @@ export const transactionReducer = (state = initialState, action) => {
           (transaction) => transaction.type === "expense",
         ),
       };
-    // TODO add with payload(form)
-    case ADD_WITH_PAYLOAD:
-      const payloadTransaction = {
-        transaction_id: action.payload.id,
-        transaction_name: action.payload.name,
-        amount: action.payload.amount,
-        type: action.payload.trType,
-        date: action.payload.date,
-      };
+    //   TODO fix that the deleted transaction wont appear
+    case DELETE_TRANSACTIONS:
       return {
         ...state,
-        allTransactions: [...state.allTransactions, payloadTransaction],
-        filteredTransactions: [
-          ...state.filteredTransactions,
-          payloadTransaction,
-        ],
+        filteredTransactions: state.allTransactions.filter(
+          (transaction) => !action.payload.includes(transaction.id),
+        ),
       };
     default:
       return state;
