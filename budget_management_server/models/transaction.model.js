@@ -8,16 +8,22 @@ const db = require("../config/db");
 
 // create new transaction
 exports.createNewTransaction = async (transaction) => {
-  const { transaction_name, amount, type, date } = transaction;
+  const { transaction_name, amount, type, date, transaction_details } =
+    transaction;
   const sql =
-    "INSERT INTO transactions (transaction_name,amount, type, date) VALUES (?, ?, ?, ?)";
-  db.query(sql, [transaction_name, amount, type, date], (err, res) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(res);
-    }
-  });
+    "INSERT INTO transactions (transaction_name,amount, type, date,transaction_details) VALUES (?, ?, ?, ?, ?)";
+  db.query(
+    sql,
+    [transaction_name, amount, type, date, transaction_details],
+    (err, res) => {
+      if (err) {
+        console.log(err);
+      }
+      // else {
+      //   console.log(res);
+      // }
+    },
+  );
 };
 
 exports.deleteTransactionsByIds = (transaction_ids) => {

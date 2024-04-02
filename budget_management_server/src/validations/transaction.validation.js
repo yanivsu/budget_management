@@ -7,6 +7,7 @@ const createTransaction = {
     date: Joi.date().required(),
     amount: Joi.number().required(),
     type: Joi.string().required().valid("income", "expense"),
+    transaction_details: Joi.string().required(),
   }),
 };
 // Validation for deleting a transaction that it is an array of integers >0

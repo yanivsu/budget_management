@@ -6,8 +6,15 @@ module.exports.createTransactionService = async (
   amount,
   type,
   date,
+  transaction_details,
 ) => {
-  await BudgetModel.createNewTransaction(transaction_name, amount, type, date);
+  await BudgetModel.createNewTransaction(
+    transaction_name,
+    amount,
+    type,
+    date,
+    transaction_details,
+  );
   return true;
 };
 

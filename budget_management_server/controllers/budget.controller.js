@@ -7,9 +7,8 @@ const BudgetService = require("../services/budget.service");
 exports.createTransaction = async (req, res, next) => {
   try {
     const transaction = req.body;
-    const transactionAdded = await BudgetService.createTransactionService(
-      transaction
-    );
+    const transactionAdded =
+      await BudgetService.createTransactionService(transaction);
 
     return res.status(200).send({ transactionAdded });
   } catch (err) {
@@ -33,16 +32,19 @@ exports.getAllTransactions = async (req, res, next) => {
 exports.deleteTransactionsByIds = async (req, res, next) => {
   try {
     const transactionIds = req.body.transactionIds;
-    const affectedRows = await BudgetService.deleteTransactionsByIdsService(
-      transactionIds
-    );
+    const affectedRows =
+      await BudgetService.deleteTransactionsByIdsService(transactionIds);
     if (affectedRows === 0) {
       // No rows were deleted, so the transactionIds must not exist
       res.status(404).json({ message: "Transactions not found" });
       return;
     } else {
       // The transactions were successfully deleted
-      res.status(200).json({ message: "Transactions successfully deleted" });
+      res.status(200).json({
+        message: "Transactions successfully deleted",
+        transactionIds: transactionIds,
+      });
+
       return;
     }
   } catch (err) {
@@ -57,9 +59,8 @@ exports.updateTransactionById = async (req, res, next) => {
   try {
     const transaction = req.body;
 
-    const affectedRows = await BudgetService.updateTransactionByIdService(
-      transaction
-    );
+    const affectedRows =
+      await BudgetService.updateTransactionByIdService(transaction);
     if (affectedRows === 0) {
       // No rows were deleted, so the transactionIds must not exist
       res.status(404).json({ message: "Transaction not found" });
