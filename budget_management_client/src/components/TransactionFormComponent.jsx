@@ -167,7 +167,7 @@ export default function TransactionFormComponent({
             ) : isUpdating ? (
               "Update"
             ) : (
-              "Submit"
+              "Add"
             )}
           </Button>
           <Button

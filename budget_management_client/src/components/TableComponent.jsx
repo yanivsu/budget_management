@@ -1,6 +1,13 @@
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
-import { Button, ButtonGroup, Pagination, ToggleButton } from "react-bootstrap";
+import {
+  Button,
+  ButtonGroup,
+  OverlayTrigger,
+  Pagination,
+  Popover,
+  ToggleButton,
+} from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -41,12 +48,33 @@ export const TableComponent = () => {
   /*** selected all/income/expense  ***/
   const [selectedRows, setSelectedRows] = useState([]);
   const [radioValue, setRadioValue] = useState("1");
+  const [popoverText, setPopoverText] = useState("");
+  // const [conditionForPopover, setConditionForPopover] = useState(false);
+  const [showPopover, setShowPopover] = useState(false);
+  const [showDeletePopover, setShowDeletePopover] = useState(false);
+
+  useEffect(() => {
+    if (selectedRows.length === 1) {
+      // setConditionForPopover(true);
+      setShowDeletePopover(false);
+      setShowPopover(false);
+    } else {
+      // setConditionForPopover(false);
+      setShowPopover(false);
+    }
+  }, [selectedRows]);
 
   const radios = [
     { name: "All", value: "1" },
     { name: "Income", value: "2" },
     { name: "Expense", value: "3" },
   ]; //
+
+  const renderPopover = (props) => (
+    <Popover id="popover-basic" {...props}>
+      <Popover.Body>{popoverText}</Popover.Body>
+    </Popover>
+  );
 
   /*** Handlers ***/
 
@@ -69,8 +97,16 @@ export const TableComponent = () => {
     navigate("/transaction", { state: { transaction } });
   };
 
+  // const deleteSelectedHandler = () => {
+  //   dispatch(deleteTransactions(selectedRows));
+  // };
   const deleteSelectedHandler = () => {
-    dispatch(deleteTransactions(selectedRows));
+    if (selectedRows.length === 0) {
+      setPopoverText("Please select at least one transaction to delete.");
+      setShowDeletePopover(true);
+    } else {
+      dispatch(deleteTransactions(selectedRows));
+    }
   };
 
   // selectedRowHandler hold only the id's of the selected rows
@@ -109,33 +145,52 @@ export const TableComponent = () => {
             Add Transaction
           </Button>
 
-          <Button
-            className="me-1"
-            variant="outline-primary"
-            size="sm"
-            onClick={deleteSelectedHandler}
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            overlay={renderPopover}
+            show={showDeletePopover}
           >
-            Delete Selected Transactions
-          </Button>
+            <Button
+              className="me-1"
+              variant="outline-primary"
+              size="sm"
+              onClick={deleteSelectedHandler}
+            >
+              Delete Selected Transactions
+            </Button>
+          </OverlayTrigger>
           {/*can edit only one selected transaction*/}
-          <Button
-            variant="outline-primary"
-            size="sm"
-            onClick={() => {
-              if (selectedRows.length === 1) {
-                // gets the transaction data from te store
-                const transactionToEdit = tsStore.find(
-                  (transaction) =>
-                    transaction.transaction_id === selectedRows[0],
-                );
-                updateTransactionHandler(transactionToEdit);
-              } else {
-                console.log("Please select exactly one transaction to edit.");
-              }
-            }}
+          <OverlayTrigger
+            trigger="click"
+            placement="bottom"
+            overlay={renderPopover}
+            show={showPopover}
           >
-            Edit Transaction
-          </Button>
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={() => {
+                if (selectedRows.length === 1) {
+                  // gets the transaction data from te store
+                  const transactionToEdit = tsStore.find(
+                    (transaction) =>
+                      transaction.transaction_id === selectedRows[0],
+                  );
+                  updateTransactionHandler(transactionToEdit);
+                } else {
+                  console.log("Please select exactly one transaction to edit.");
+                  setShowPopover(true);
+                  setPopoverText(
+                    "Please select exactly one transaction to edit.",
+                  );
+                }
+              }}
+            >
+              {" "}
+              Edit Transaction
+            </Button>
+          </OverlayTrigger>
         </ButtonGroup>
       </div>
 
