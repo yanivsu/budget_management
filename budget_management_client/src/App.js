@@ -5,7 +5,10 @@ import { TableComponent } from "./components/TableComponent";
 import TransactionFormComponent from "./components/TransactionFormComponent";
 import { LoginComponent } from "./components/LoginComponent";
 import { TransactionInfoComponent } from "./components/TransactionInfoComponent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
+<FontAwesomeIcon icon="fa-solid fa-pen-to-square" />;
 // TODO create a logo for the app
 // TODO login an signup page
 
@@ -17,8 +20,12 @@ function App() {
         <Route path="/login" element={<LoginComponent />} />
         <Route path="/dashboard" element={<DashboardComponent />} />
         <Route path="/table" element={<TableComponent />} />
+        {/*route gets the transaction id parameter*/}
+        <Route
+          path="/transactionInfo/:transactionId"
+          element={<TransactionInfoComponent />}
+        />
         <Route path="/transaction" element={<TransactionFormComponent />} />
-        <Route path="/transactionInfo" element={<TransactionInfoComponent />} />
       </Routes>
     </Router>
   );
