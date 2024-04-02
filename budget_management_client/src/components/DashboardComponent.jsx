@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { getAllTransactions } from "../actions/transactionAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Card from "react-bootstrap/Card";
 
 export const DashboardComponent = () => {
   const dispatch = useDispatch();
@@ -47,46 +48,34 @@ export const DashboardComponent = () => {
     <>
       <Container>
         <h1>Budget Management</h1>
-        <Row>
-          <Col>
-            {/*<h3 className="text-center">Hello {user.name}</h3>*/}
-            <h3 className="ms-5">Hello {user.name}</h3>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <ul
-              className={
-                currentBalance >= 0
-                  ? "text-success fw-bold"
-                  : "text-danger fw-bold"
-              }
-            >
-              Current Balance: {currentBalance} ₪
-            </ul>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <ul className="text-success">Total Incomes: {income} ₪</ul>
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <ul className="text-danger">Total Expenses: {expense} ₪</ul>
-          </Col>
-        </Row>
-        <Row>
-          <Col className="ms-5">
+        <Card>
+          <Card.Header as="h5">Hello {user.name}</Card.Header>
+          <Card.Body>
+            <Card.Title>
+              <ul
+                className={
+                  currentBalance >= 0
+                    ? "text-success fw-bold"
+                    : "text-danger fw-bold"
+                }
+              >
+                Current Balance: {currentBalance} ₪
+              </ul>
+            </Card.Title>
+            <Card.Text>
+              <ul className="text-success">Total Incomes: {income} ₪</ul>
+              <ul className="text-danger">Total Expenses: {expense} ₪</ul>
+            </Card.Text>
             <Button
+              className="ms-5"
               variant="outline-primary"
               size="sm"
               onClick={() => navigate("/table")}
             >
               Show Transactions
-            </Button>
-          </Col>
-        </Row>
+            </Button>{" "}
+          </Card.Body>
+        </Card>
       </Container>
     </>
   );
