@@ -1,17 +1,19 @@
 import Table from "react-bootstrap/Table";
 import Form from "react-bootstrap/Form";
-import { Button, ButtonGroup, ToggleButton } from "react-bootstrap";
+import { Button, ButtonGroup, Pagination, ToggleButton } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
 import {
   GET_ALL_TRANSACTIONS,
   SHOW_INCOME,
   SHOW_EXPENSE,
   SHOW_ALL_TRANSACTIONS,
   getAllTransactions,
+  DELETE_TRANSACTIONS,
+  deleteTransactions,
 } from "../actions/transactionAction";
-
-import { useNavigate } from "react-router-dom";
+import Container from "react-bootstrap/Container";
 
 // component that shows all transaction
 export const TableComponent = () => {
@@ -29,6 +31,13 @@ export const TableComponent = () => {
     (state) => state.transactions.filteredTransactions,
   );
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
+
+  const transactionsOnCurrentPage = tsStore.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
   /*** selected all/income/expense  ***/
   const [selectedRows, setSelectedRows] = useState([]);
   const [radioValue, setRadioValue] = useState("1");
@@ -48,8 +57,6 @@ export const TableComponent = () => {
     } else if (value === "3") {
       dispatch({ type: SHOW_EXPENSE });
     } else {
-      // TODO change this just to show all transactions
-      // dispatch(getAllTransactions());
       dispatch({ type: SHOW_ALL_TRANSACTIONS });
     }
   };
@@ -58,13 +65,16 @@ export const TableComponent = () => {
     // dispatch({ type: ADD_TRANSACTION });
   };
 
-  const getTrsHandler = () => {
-    dispatch({ type: GET_ALL_TRANSACTIONS });
-    console.log(tsStore);
+  const updateTransactionHandler = (transaction) => {
+    navigate("/transaction", { state: { transaction } });
   };
 
-  // handleSelectedRow hold only the id's of the selected rows
-  const handleSelectedRow = (id) => {
+  const deleteSelectedHandler = () => {
+    dispatch(deleteTransactions(selectedRows));
+  };
+
+  // selectedRowHandler hold only the id's of the selected rows
+  const selectedRowHandler = (id) => {
     setSelectedRows((prevState) => {
       if (prevState.includes(id)) {
         return prevState.filter((itemId) => itemId !== id);
@@ -76,46 +86,92 @@ export const TableComponent = () => {
 
   /******* functions *******/
 
-  // TODO when clicking a row, should open a info- view of the record
   return (
-    <>
+    <Container>
+      <h2>Transaction Table</h2>
       {/****buttons****/}
-      <Button size="sm" onClick={addTransactionHandler}>
-        Add Transaction
-      </Button>
-      <Button size="sm" onClick={() => setSelectedRows([])}>
-        Clear Selection
-      </Button>
-      <Button
-        size="sm"
-        onClick={() => {
-          // console.log(ts)
-        }}
-      >
-        Remove Selected
-      </Button>
-      {/*TODO can edit only if one transaction is selected!*/}
-      <Button size="sm" onClick={getTrsHandler}>
-        Edit Transaction{" "}
-      </Button>
-      {/****buttons****/}
+      <div className="d-flex justify-content-center ">
+        <ButtonGroup>
+          <Button
+            className="me-1"
+            variant="outline-primary"
+            size="sm"
+            onClick={() => setSelectedRows([])}
+          >
+            Clear Selection
+          </Button>
+          <Button
+            className="me-1"
+            variant="outline-primary"
+            size="sm"
+            onClick={addTransactionHandler}
+          >
+            Add Transaction
+          </Button>
+
+          <Button
+            className="me-1"
+            variant="outline-primary"
+            size="sm"
+            onClick={deleteSelectedHandler}
+          >
+            Delete Selected Transactions
+          </Button>
+          {/*can edit only one selected transaction*/}
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={() => {
+              if (selectedRows.length === 1) {
+                // gets the transaction data from te store
+                const transactionToEdit = tsStore.find(
+                  (transaction) =>
+                    transaction.transaction_id === selectedRows[0],
+                );
+                updateTransactionHandler(transactionToEdit);
+              } else {
+                console.log("Please select exactly one transaction to edit.");
+              }
+            }}
+          >
+            Edit Transaction
+          </Button>
+        </ButtonGroup>
+      </div>
+
       <div style={{ display: "flex", justifyContent: "center" }}>
         {/*<ButtonGroup className="d-flex justify-content-center">*/}
         <ButtonGroup className="my-2">
-          {radios.map((radio, idx) => (
-            <ToggleButton
-              key={idx}
-              id={`radio-${idx}`}
-              type="radio"
-              variant={idx % 2 ? "outline-success" : "outline-danger"}
-              name="radio"
-              value={radio.value}
-              checked={radioValue === radio.value}
-              onChange={(e) => handleRadioChange(e.currentTarget.value)}
-            >
-              {radio.name}
-            </ToggleButton>
-          ))}
+          {radios.map((radio, idx) => {
+            // changing buttons color
+            let variant;
+            switch (idx) {
+              case 0:
+                variant = "outline-secondary";
+                break;
+              case 1:
+                variant = "outline-success";
+                break;
+              case 2:
+                variant = "outline-danger";
+                break;
+            }
+
+            return (
+              <ToggleButton
+                key={idx}
+                id={`radio-${idx}`}
+                type="radio"
+                variant={variant}
+                name="radio"
+                value={radio.value}
+                checked={radioValue === radio.value}
+                onChange={(e) => handleRadioChange(e.currentTarget.value)}
+              >
+                {radio.name}
+              </ToggleButton>
+            );
+          })}
         </ButtonGroup>
       </div>
 
@@ -123,7 +179,7 @@ export const TableComponent = () => {
         <thead>
           <tr>
             <th></th>
-            <th>ID</th>
+            {/*<th>ID</th>*/}
             <th>Date</th>
             <th>Name</th>
             <th>Amount</th>
@@ -132,22 +188,30 @@ export const TableComponent = () => {
         </thead>
         <tbody>
           {/*maps over hardcoded data*/}
-          {tsStore.map((transaction) => (
-            // {transactions.transactions.map((transaction) => (
+          {transactionsOnCurrentPage.map((transaction) => (
+            // {tsStore.map((transaction) => (
             <tr
               key={transaction.transaction_id}
+              // A click on the row would navigate to the info transaction component with the transaction_id in the url
+
               onClick={() =>
-                console.log(`Row ${transaction.transaction_id} was clicked`)
+                navigate(`/transactionInfo/${transaction.transaction_id}`)
               }
             >
-              <td>
+              <td className="d-flex justify-content-center ">
+                {/*when clicking the checkbox it would select and prevent with event.stopPropagation();
+                                the parent element to activate the navigate to transaction info */}
                 <Form.Check
                   type="checkbox"
                   checked={selectedRows.includes(transaction.transaction_id)}
-                  onChange={() => handleSelectedRow(transaction.transaction_id)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                  onChange={() =>
+                    selectedRowHandler(transaction.transaction_id)
+                  }
                 />
               </td>
-              <td>{transaction.transaction_id}</td>
               <td>{new Date(transaction.date).toLocaleDateString()}</td>
               <td>{transaction.transaction_name}</td>
               <td>{transaction.amount}</td>
@@ -156,6 +220,23 @@ export const TableComponent = () => {
           ))}
         </tbody>
       </Table>
-    </>
+
+      <div className="d-flex justify-content-center ">
+        {/*the pagination element shows X transactions (set in itemsPerPage)*/}
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => setCurrentPage((old) => Math.max(old - 1, 1))}
+          />
+          <Pagination.Item>{currentPage}</Pagination.Item>
+          <Pagination.Next
+            onClick={() =>
+              setCurrentPage((old) =>
+                Math.min(old + 1, Math.ceil(tsStore.length / itemsPerPage)),
+              )
+            }
+          />
+        </Pagination>
+      </div>
+    </Container>
   );
 };
