@@ -8,7 +8,7 @@ export const checkCredentials =
   (user_name, user_password) => async (dispatch) => {
     try {
       console.log("Checking user credentials");
-      console.log(user_name, user_password);
+      // console.log(user_name, user_password);
       const response = await axios.post(API_URL + "login", {
         user_name,
         user_password,

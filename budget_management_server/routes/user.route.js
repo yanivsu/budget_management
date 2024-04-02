@@ -6,7 +6,7 @@ const router = express.Router();
 router.post(
   "/login",
   validateInput(validation.userLogin),
-  userController.getUserAuth,
+  userController.login,
 );
 module.exports = router;
 

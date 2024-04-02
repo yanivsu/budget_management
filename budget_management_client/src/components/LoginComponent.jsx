@@ -11,10 +11,10 @@ export const LoginComponent = () => {
   const dispatch = useDispatch();
   const isValidUser = useSelector((state) => state.user.isValidUser);
   const error = useSelector((state) => state.user.error);
-
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (isValidUser) {
+      console.log(isValidUser);
       navigate("/dashboard"); // navigate to home after login
       setLoading(false);
     }
