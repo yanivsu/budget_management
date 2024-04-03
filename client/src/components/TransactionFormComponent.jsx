@@ -83,7 +83,7 @@ export default function TransactionFormComponent({
           <Form.Control
             type="text"
             {...register("transaction_name", { required: true })}
-            isInvalid={errors.transactionName}
+            isInvalid={errors.transaction_name}
           />
           <Form.Control.Feedback type="invalid">
             This field is required
@@ -95,7 +95,7 @@ export default function TransactionFormComponent({
           <Form.Control
             type="text"
             {...register("transaction_details", { required: true })}
-            isInvalid={errors.transactiondetails}
+            isInvalid={errors.transaction_details}
           />
           <Form.Control.Feedback type="invalid">
             This field is required
