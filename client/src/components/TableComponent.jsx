@@ -33,7 +33,6 @@ export const TableComponent = () => {
   };
   // load all the transactions initially when the component is mounted
   useEffect(() => {
-    console.log("First call for data when component was mounted");
     dispatch(getAllTransactions(user.id));
   }, []);
 
@@ -46,13 +45,24 @@ export const TableComponent = () => {
     (state) => state.transactions.currentBalance,
   );
 
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const itemsPerPage = 8;
+  //
+  // const transactionsOnCurrentPage = tsStore.slice(
+  //   (currentPage - 1) * itemsPerPage,
+  //   currentPage * itemsPerPage,
+  // );
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const transactionsOnCurrentPage = tsStore.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  let transactionsOnCurrentPage = [];
+  if (tsStore) {
+    transactionsOnCurrentPage = tsStore.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage,
+    );
+  }
   /*** selected all/income/expense  ***/
   const [selectedRows, setSelectedRows] = useState([]);
   const [radioValue, setRadioValue] = useState("1");
@@ -61,6 +71,7 @@ export const TableComponent = () => {
   const [showPopover, setShowPopover] = useState(false);
   const [showDeletePopover, setShowDeletePopover] = useState(false);
 
+  // TODO dont show 2 popover together
   useEffect(() => {
     if (selectedRows.length === 1) {
       // setConditionForPopover(true);
@@ -96,13 +107,14 @@ export const TableComponent = () => {
       dispatch({ type: SHOW_ALL_TRANSACTIONS });
     }
   };
+  /**** Handlers ********/
   const addTransactionHandler = () => {
     navigate("/transaction");
-    // dispatch({ type: ADD_TRANSACTION });
   };
 
   const updateTransactionHandler = (transaction) => {
     navigate("/transaction", { state: { transaction } });
+    setSelectedRows([]);
   };
 
   const deleteSelectedHandler = () => {
@@ -110,7 +122,8 @@ export const TableComponent = () => {
       setPopoverText("Please select at least one transaction to delete.");
       setShowDeletePopover(true);
     } else {
-      dispatch(deleteTransactions(selectedRows));
+      dispatch(deleteTransactions(selectedRows, user.id));
+      setSelectedRows([]);
     }
   };
 

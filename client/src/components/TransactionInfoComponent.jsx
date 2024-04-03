@@ -9,10 +9,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import {
-  addTransaction,
-  deleteTransactions,
-} from "../actions/transactionAction";
+import { deleteTransactions } from "../actions/transactionAction";
 
 // subscribe the component to the store and pass to it the latest state.
 export const TransactionInfoComponent = () => {
@@ -25,10 +22,12 @@ export const TransactionInfoComponent = () => {
   const transaction = tsStore.find(
     (transaction) => transaction.transaction_id === parseInt(transactionId),
   );
+  console.log(transaction);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const userId = localStorage.getItem("userId");
 
   const goBack = () => navigate("/table");
 
@@ -37,13 +36,13 @@ export const TransactionInfoComponent = () => {
     navigate("/transaction", { state: { transaction } });
   };
   const deleteSelectedHandler = () => {
-    setLoading(true);
+    console.log();
+    dispatch(deleteTransactions([transactionId], userId));
     setTimeout(() => {
+      setLoading(true);
       navigate("/table");
       setLoading(false);
     }, 1500); // 1500ms delay
-
-    dispatch(deleteTransactions([transactionId]));
   };
 
   return (
@@ -57,9 +56,7 @@ export const TransactionInfoComponent = () => {
           <h2>Transaction Information</h2>
         </Row>
         <Card style={{ width: "18rem" }}>
-          <Card.Header>
-            Transaction ID: {transaction.transaction_id}
-          </Card.Header>
+          <Card.Header>Transaction ID: {transactionId}</Card.Header>
           <Card.Body>
             <Card.Title>Name: {transaction.transaction_name}</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">

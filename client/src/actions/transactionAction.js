@@ -29,8 +29,7 @@ export const getAllTransactions = (userId) => async (dispatch) => {
 };
 
 // api post call add a new transaction to the db through the server
-export const addTransaction = (newTransaction) => async (dispatch) => {
-  console.log(newTransaction);
+export const addTransaction = (newTransaction, userId) => async (dispatch) => {
   try {
     const response = await axios.post(
       API_URL + "createTransaction",
@@ -40,31 +39,30 @@ export const addTransaction = (newTransaction) => async (dispatch) => {
       type: ADD_TRANSACTION,
       payload: response.data.transaction,
     });
+    console.log(`New transaction added: ${newTransaction.transaction_name}`);
   } catch (error) {
     console.error(error);
-    // handle error
   }
-  // TODO fix this undefined:
-  console.log(`New transaction added: ${newTransaction.name}`);
-  console.log("update all transactions list");
-  getAllTransactions();
+  dispatch(getAllTransactions(userId));
 };
 
 // delete api call that sends with an array of selected transaction fo deletion
-export const deleteTransactions = (transactionIds) => async (dispatch) => {
-  console.log("Transactions to delete: ", transactionIds);
-  try {
-    const response = await axios.delete(API_URL + "deleteTransaction", {
-      data: { transactionIds },
-    });
-    dispatch({
-      type: DELETE_TRANSACTIONS,
-      payload: response.data.transactionIds,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
+export const deleteTransactions =
+  (transactionIds, userId) => async (dispatch) => {
+    console.log("Transactions to delete: ", transactionIds);
+    try {
+      const response = await axios.delete(API_URL + "deleteTransaction", {
+        data: { transactionIds },
+      });
+      dispatch({
+        type: DELETE_TRANSACTIONS,
+        payload: response.data.transactionIds,
+      });
+      dispatch(getAllTransactions(userId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 export const updateTransaction = (newTransaction) => async (dispatch) => {
   console.log(newTransaction);

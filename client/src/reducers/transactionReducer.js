@@ -11,6 +11,27 @@ const initialState = {
   allTransactions: [],
   filteredTransactions: [],
   currentFilter: "all",
+  totalIncome: 0,
+  totalExpense: 0,
+};
+
+// Helper function to calculate financials
+const calculateFinancials = (transactions) => {
+  const totalIncome = transactions.reduce((total, transaction) => {
+    return transaction && transaction.type === "income"
+      ? total + parseFloat(transaction.amount)
+      : total;
+  }, 0);
+
+  const totalExpense = transactions.reduce((total, transaction) => {
+    return transaction && transaction.type === "expense"
+      ? total + parseFloat(transaction.amount)
+      : total;
+  }, 0);
+
+  const currentBalance = totalIncome - totalExpense;
+
+  return { totalIncome, totalExpense, currentBalance };
 };
 
 export const transactionReducer = (state = initialState, action) => {
@@ -18,22 +39,9 @@ export const transactionReducer = (state = initialState, action) => {
     case GET_ALL_TRANSACTIONS:
       // Check if action.payload is an array before processing
       if (Array.isArray(action.payload)) {
-        // Calculate total income and expense from the payload
-        const totalIncome = action.payload.reduce((total, transaction) => {
-          return transaction.type === "income"
-            ? total + parseFloat(transaction.amount)
-            : total;
-        }, 0);
-
-        const totalExpense = action.payload.reduce((total, transaction) => {
-          return transaction.type === "expense"
-            ? total + parseFloat(transaction.amount)
-            : total;
-        }, 0);
-
-        // Calculate current balance
-        const currentBalance = totalIncome - totalExpense;
-
+        // Calculate total income and expense and current balance from the payload
+        const { totalIncome, totalExpense, currentBalance } =
+          calculateFinancials(action.payload);
         return {
           ...state,
           allTransactions: action.payload,
@@ -47,24 +55,31 @@ export const transactionReducer = (state = initialState, action) => {
         console.error("Payload is not an array:", action.payload);
         return state;
       }
+
     case SHOW_ALL_TRANSACTIONS:
       return {
         ...state,
-        // allTransactions: action.payload, // update allTransactions with the payload
-        // TODO fixed all transactions to support filtering.
-        // filteredTransactions: action.payload,
-        allTransactions: state.filteredTransactions,
+        allTransactions: state.allTransactions, // Assuming action.payload contains all transactions
+        filteredTransactions: state.allTransactions, // Show all without filter
       };
-    //   TODO should change with new transaction from form
+
     case ADD_TRANSACTION:
-      const newTransaction = {};
+      const newTransaction = action.payload;
+      const updatedTransactions = [...state.allTransactions, newTransaction];
+
+      const { totalIncome, totalExpense, currentBalance } =
+        calculateFinancials(updatedTransactions);
+
       return {
         ...state,
-        allTransactions: [...state.allTransactions, newTransaction],
+        allTransactions: updatedTransactions,
         filteredTransactions:
           state.currentFilter === "all"
-            ? [...state.filteredTransactions, newTransaction]
+            ? updatedTransactions
             : state.filteredTransactions,
+        currentBalance: currentBalance,
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
       };
 
     case SHOW_INCOME:
@@ -77,6 +92,7 @@ export const transactionReducer = (state = initialState, action) => {
           (transaction) => transaction.type === "income",
         ),
       };
+
     case SHOW_EXPENSE:
       return {
         ...state,
@@ -85,14 +101,32 @@ export const transactionReducer = (state = initialState, action) => {
           (transaction) => transaction.type === "expense",
         ),
       };
-    //   TODO fix that the deleted transaction wont appear
+
     case DELETE_TRANSACTIONS:
+      const updatedTransactionsDelete = state.allTransactions.filter(
+        (transaction) => !action.payload.includes(transaction.transaction_id),
+      );
+
+      const { totalIncomeDelete, totalExpenseDelete, currentBalanceDelete } =
+        calculateFinancials(updatedTransactionsDelete);
+
+      // Update filteredTransactions based on the current filter
+      const updatedFilteredTransactions =
+        state.currentFilter === "all"
+          ? updatedTransactionsDelete
+          : updatedTransactionsDelete.filter(
+              (transaction) => transaction.type === state.currentFilter,
+            );
+
       return {
         ...state,
-        filteredTransactions: state.allTransactions.filter(
-          (transaction) => !action.payload.includes(transaction.id),
-        ),
+        allTransactions: updatedTransactionsDelete,
+        filteredTransactions: updatedFilteredTransactions,
+        currentBalance: currentBalanceDelete,
+        totalIncome: totalIncomeDelete,
+        totalExpense: totalExpenseDelete,
       };
+
     default:
       return state;
   }

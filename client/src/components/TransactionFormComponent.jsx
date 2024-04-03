@@ -47,9 +47,8 @@ export default function TransactionFormComponent({
     // get the userId and sent it with the transaction data
     const userId = localStorage.getItem("userId");
     const transactionData = { ...data, user_id: userId };
-
     console.log(data);
-    dispatch(addTransaction(transactionData));
+    dispatch(addTransaction(transactionData, userId));
     setTimeout(() => {
       navigate("/table");
       setLoading(false);
@@ -68,7 +67,7 @@ export default function TransactionFormComponent({
 
   const clearForm = () => reset();
   const goBack = () => navigate("/table");
-
+  // TODO cant add data in hebrew?!
   return (
     <Container
       className="d-flex flex-column justify-content-center align-items-center"
