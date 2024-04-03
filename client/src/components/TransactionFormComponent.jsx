@@ -44,8 +44,12 @@ export default function TransactionFormComponent({
 
   const onSubmit = (data) => {
     setLoading(true);
+    // get the userId and sent it with the transaction data
+    const userId = localStorage.getItem("userId");
+    const transactionData = { ...data, user_id: userId };
+
     console.log(data);
-    dispatch(addTransaction(data));
+    dispatch(addTransaction(transactionData));
     setTimeout(() => {
       navigate("/table");
       setLoading(false);

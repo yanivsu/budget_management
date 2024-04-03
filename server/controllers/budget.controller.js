@@ -20,7 +20,8 @@ exports.createTransaction = async (req, res, next) => {
 // Get all transaction Controller
 exports.getAllTransactions = async (req, res, next) => {
   try {
-    const transactions = await BudgetService.getAllTransactionsService();
+    const userId = req.params.userId;
+    const transactions = await BudgetService.getAllTransactionsService(userId);
     return res.status(200).send({ transactions });
   } catch (err) {
     res.status(400).json({ Error: err.message });

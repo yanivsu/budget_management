@@ -1,14 +1,10 @@
 const mysql = require("mysql");
-// TODO fix here the .env
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "admin",
-  database: "budget_app",
-  // host: process.env.HOST,
-  // user: process.env.USER,
-  // password: process.env.PASSWORD,
-  // database: process.env.DATABASE,
+  host: process.env.HOST,
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+  port: process.env.PORTMYSQL,
 });
 
 db.connect((err) => {
@@ -17,28 +13,4 @@ db.connect((err) => {
   }
   console.log("Connected to the database.");
 });
-// const connectDB = () => {
-//     const connection = mysql.createConnection({
-//         // host: process.env.HOST,
-//         // user: process.env.USER,
-//         // password: process.env.PASSWORD,
-//         // database: process.env.DATABASE
-//         host: 'localhost',
-//         user: 'root',
-//         password: 'admin',
-//         database: 'budget_app'
-//     });
-//     // HOST = 'localhost'
-//     // USER = 'root@localhost'
-//     // PASSWORD = 'admin'
-//     // DATABASE = 'budget_app'
-//
-//     connection.connect((err) => {
-//         if (err) {
-//             return console.error('An error occurred: ' + err.message);
-//         }
-//         console.log('Connected to the MySQL server.');
-//     });
-// }
-
 module.exports = db;

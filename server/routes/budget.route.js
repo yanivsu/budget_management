@@ -11,7 +11,7 @@ router.post(
   validateInput(validation.createTransaction),
   BudgetController.createTransaction,
 );
-router.get("/getAllTransactions", BudgetController.getAllTransactions);
+router.get("/getAllTransactions/:userId", BudgetController.getAllTransactions);
 
 // route uses validation that requires transaction_id parameter
 router.delete(

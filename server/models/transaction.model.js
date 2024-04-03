@@ -5,16 +5,29 @@ const db = require("../config/db");
 // Call the function to get the connection object
 
 // authenticate user
+// get all user's transactions
+exports.getAllTransactions = async (userId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM transactions WHERE user_id = ?";
+    db.query(sql, [userId], (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
 
 // create new transaction
 exports.createNewTransaction = async (transaction) => {
-  const { transaction_name, amount, type, date, transaction_details } =
+  const { transaction_name, amount, type, date, transaction_details, user_id } =
     transaction;
   const sql =
-    "INSERT INTO transactions (transaction_name,amount, type, date,transaction_details) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO transactions (transaction_name,amount, type, date,transaction_details,user_id) VALUES (?, ?, ?, ?, ?, ?)";
   db.query(
     sql,
-    [transaction_name, amount, type, date, transaction_details],
+    [transaction_name, amount, type, date, transaction_details, user_id],
     (err, res) => {
       if (err) {
         console.log(err);
@@ -125,18 +138,6 @@ exports.updateTransaction = (transactionId, name, amount, type, date) => {
 // }
 
 // get all transactions
-exports.getAllTransactions = async () => {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM transactions";
-    db.query(sql, (err, results) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-};
 
 // TODO fix get all incomed and expenses
 // get all income transactions

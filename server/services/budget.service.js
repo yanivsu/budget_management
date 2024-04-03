@@ -7,6 +7,7 @@ module.exports.createTransactionService = async (
   type,
   date,
   transaction_details,
+  user_id,
 ) => {
   await BudgetModel.createNewTransaction(
     transaction_name,
@@ -14,13 +15,14 @@ module.exports.createTransactionService = async (
     type,
     date,
     transaction_details,
+    user_id,
   );
   return true;
 };
 
 // Get all transaction
-module.exports.getAllTransactionsService = async () => {
-  const transactions = await BudgetModel.getAllTransactions();
+module.exports.getAllTransactionsService = async (userId) => {
+  const transactions = await BudgetModel.getAllTransactions(userId);
   if (!transactions) {
     throw new Error("No Transactions");
   } else {

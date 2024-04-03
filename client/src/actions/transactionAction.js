@@ -14,10 +14,10 @@ export const SHOW_EXPENSE = "showExpense";
 // Action creators
 
 // api call get all transactions from server
-export const getAllTransactions = () => async (dispatch) => {
+export const getAllTransactions = (userId) => async (dispatch) => {
   try {
     console.log("Get all transactions from DB call");
-    const response = await axios.get(API_URL + "getAllTransactions");
+    const response = await axios.get(API_URL + "getAllTransactions/" + userId);
     dispatch({
       type: GET_ALL_TRANSACTIONS,
       payload: response.data.transactions,

@@ -9,12 +9,16 @@ import Card from "react-bootstrap/Card";
 export const DashboardComponent = () => {
   const dispatch = useDispatch();
   let navigate = useNavigate();
+  const user = {
+    id: localStorage.getItem("userId"),
+    name: localStorage.getItem("userName"),
+  };
 
   // TODO get the transaction that belongs to the logged in user
   // load all the transactions initially when the component is mounted
   useEffect(() => {
     console.log("First call for data when component was mounted");
-    dispatch(getAllTransactions());
+    dispatch(getAllTransactions(user.id));
   }, []);
 
   // subscribe the component to the store and pass to it the latest state.
@@ -36,12 +40,7 @@ export const DashboardComponent = () => {
       return total;
     }
   }, 0);
-  const user = {
-    id: 1,
-    name: "Ron",
-  };
-  // const income = 256;
-  // const expense = 658;
+
   let currentBalance = income - expense;
 
   return (
