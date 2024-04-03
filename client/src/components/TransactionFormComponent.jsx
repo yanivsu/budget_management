@@ -29,6 +29,7 @@ export default function TransactionFormComponent({
     reset,
     setValue,
   } = useForm();
+
   useEffect(() => {
     if (transaction) {
       setValue("transaction_id", transaction.transaction_id);
@@ -41,31 +42,45 @@ export default function TransactionFormComponent({
       setValue("type", transaction.type);
     }
   }, [transaction, setValue]);
+  const clearForm = () => reset();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     // get the userId and sent it with the transaction data
     const userId = localStorage.getItem("userId");
     const transactionData = { ...data, user_id: userId };
     console.log(data);
-    dispatch(addTransaction(transactionData, userId));
-    setTimeout(() => {
-      navigate("/table");
-      setLoading(false);
-    }, 1500); // 1500ms delay
-  };
-  // TODO when submiting update, form refresh and nothing happens
-  const updateHandler = (data) => {
-    setLoading(true);
-    console.log(data);
-    dispatch(updateTransaction(data));
-    setTimeout(() => {
-      navigate("/table");
-      setLoading(false);
-    }, 1500); // 1500ms delay
-  };
 
-  const clearForm = () => reset();
+    if (isUpdating) {
+      await dispatch(updateTransaction(transactionData, userId))
+        .then(() => {
+          navigate("/table");
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("err:", error);
+          setLoading(false);
+        });
+    } else {
+      await dispatch(addTransaction(transactionData, userId))
+        .then(() => {
+          navigate("/table");
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("err:", error);
+          setLoading(false);
+        });
+    }
+    clearForm();
+  };
+  // const clearForm = () => {
+  //   Object.keys(transaction).forEach((key) => {
+  //     setValue(key, "");
+  //   });
+  // };
+  // TODO when submiting update, form refresh and nothing happens
+
   const goBack = () => navigate("/table");
   // TODO cant add data in hebrew?!
   return (
@@ -77,8 +92,8 @@ export default function TransactionFormComponent({
         <h2>{isUpdating ? "Update a Transaction" : "Add a Transaction"}</h2>{" "}
       </Row>
       <Form
-        // onSubmit={handleSubmit(onSubmit)}
-        onSubmit={isUpdating ? updateHandler : handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit)}
+        // onSubmit={isUpdating ? updateHandler : handleSubmit(onSubmit)}
         style={{ width: "100%", maxWidth: "400px" }}
       >
         <Form.Group controlId="transaction_name">

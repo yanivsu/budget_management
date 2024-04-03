@@ -15,10 +15,8 @@ export const DashboardComponent = () => {
     name: localStorage.getItem("userName"),
   };
 
-  // TODO get the transaction that belongs to the logged in user
-  // load all the transactions initially when the component is mounted
+  // load all the user's transactions initially when the component is mounted
   useEffect(() => {
-    console.log("First call for data when component was mounted");
     dispatch(getAllTransactions(user.id));
   }, []);
 
@@ -39,9 +37,11 @@ export const DashboardComponent = () => {
             <Card.Title>
               <CurrentBalance currentBalance={currentBalance} />
             </Card.Title>
-            <Card.Text>
-              <ul className="text-success">Total Incomes: {totalIncome} ₪</ul>
-              <ul className="text-danger">Total Expenses: {totalExpense} ₪</ul>
+            <Card.Text className="ms-5">
+              <div className="text-success">Total Incomes: {totalIncome} ₪</div>
+              <div className="text-danger">
+                Total Expenses: {totalExpense} ₪
+              </div>
             </Card.Text>
             <Button
               className="ms-5"

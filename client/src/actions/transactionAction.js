@@ -16,7 +16,6 @@ export const SHOW_EXPENSE = "showExpense";
 // api call get all transactions from server
 export const getAllTransactions = (userId) => async (dispatch) => {
   try {
-    console.log("Get all transactions from DB call");
     const response = await axios.get(API_URL + "getAllTransactions/" + userId);
     dispatch({
       type: GET_ALL_TRANSACTIONS,
@@ -39,11 +38,11 @@ export const addTransaction = (newTransaction, userId) => async (dispatch) => {
       type: ADD_TRANSACTION,
       payload: response.data.transaction,
     });
+    await dispatch(getAllTransactions(userId));
     console.log(`New transaction added: ${newTransaction.transaction_name}`);
   } catch (error) {
     console.error(error);
   }
-  dispatch(getAllTransactions(userId));
 };
 
 // delete api call that sends with an array of selected transaction fo deletion
@@ -64,23 +63,24 @@ export const deleteTransactions =
     }
   };
 
-export const updateTransaction = (newTransaction) => async (dispatch) => {
-  console.log(newTransaction);
-  console.log("*************************************************************");
-  try {
-    const response = await axios.put(
-      API_URL + "updateTransaction",
-      newTransaction,
-    );
-    dispatch({
-      type: UPDATE_TRANSACTION,
-      payload: response.data.transaction,
-    });
-  } catch (error) {
-    console.error(error);
-    // handle error
-  }
-};
+export const updateTransaction =
+  (newTransaction, userId) => async (dispatch) => {
+    console.log("transaction " + newTransaction);
+    try {
+      const response = await axios.put(
+        API_URL + "updateTransaction",
+        newTransaction,
+      );
+      console.log(response.data);
+      dispatch({
+        type: UPDATE_TRANSACTION,
+        payload: response.data.transaction,
+      });
+      await dispatch(getAllTransactions(userId));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 export const showIncome = () => ({ type: SHOW_INCOME });
 export const showExpense = () => ({ type: SHOW_EXPENSE });

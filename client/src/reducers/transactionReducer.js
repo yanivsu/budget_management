@@ -83,7 +83,6 @@ export const transactionReducer = (state = initialState, action) => {
       };
 
     case SHOW_INCOME:
-      console.log(action.payload);
       return {
         ...state,
         currentFilter: "income",

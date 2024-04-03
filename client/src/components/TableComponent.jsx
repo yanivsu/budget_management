@@ -74,11 +74,9 @@ export const TableComponent = () => {
   // TODO dont show 2 popover together
   useEffect(() => {
     if (selectedRows.length === 1) {
-      // setConditionForPopover(true);
       setShowDeletePopover(false);
       setShowPopover(false);
     } else {
-      // setConditionForPopover(false);
       setShowPopover(false);
     }
   }, [selectedRows]);
@@ -121,6 +119,7 @@ export const TableComponent = () => {
     if (selectedRows.length === 0) {
       setPopoverText("Please select at least one transaction to delete.");
       setShowDeletePopover(true);
+      setShowPopover(false);
     } else {
       dispatch(deleteTransactions(selectedRows, user.id));
       setSelectedRows([]);
@@ -205,6 +204,7 @@ export const TableComponent = () => {
                   setPopoverText(
                     "Please select exactly one transaction to edit.",
                   );
+                  setShowDeletePopover(false);
                 }
               }}
             >
@@ -212,6 +212,14 @@ export const TableComponent = () => {
               Edit Transaction
             </Button>
           </OverlayTrigger>
+          <Button
+            className="ms-1"
+            variant="outline-primary"
+            size="sm"
+            onClick={() => navigate("/dashboard")}
+          >
+            Back to Dashboard{" "}
+          </Button>
         </ButtonGroup>
       </div>
 

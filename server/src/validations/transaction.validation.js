@@ -27,6 +27,8 @@ const updateTransaction = {
     date: Joi.date(),
     amount: Joi.number(),
     type: Joi.string().valid("income", "expense"),
+    transaction_details: Joi.string().required(),
+    user_id: Joi.number().required(),
   }),
 };
 

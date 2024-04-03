@@ -22,7 +22,6 @@ export const TransactionInfoComponent = () => {
   const transaction = tsStore.find(
     (transaction) => transaction.transaction_id === parseInt(transactionId),
   );
-  console.log(transaction);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();

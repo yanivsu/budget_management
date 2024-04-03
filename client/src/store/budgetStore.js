@@ -19,7 +19,6 @@ const store = createStore(
 
 const budgetSubscriber = () => {
   const latestState = store.getState();
-  console.log(latestState);
 };
 
 store.subscribe(budgetSubscriber);
