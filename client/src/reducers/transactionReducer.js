@@ -11,23 +11,42 @@ const initialState = {
   allTransactions: [],
   filteredTransactions: [],
   currentFilter: "all",
-  // showExpense: false,
-  // showIncome: false,
 };
 
 export const transactionReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_ALL_TRANSACTIONS:
-      return {
-        ...state,
-        // allTransactions: action.payload, // update allTransactions with the payload
-        // TODO fixed all transactions to support filtering.
-        filteredTransactions: action.payload,
-        allTransactions: state.filteredTransactions,
-        // allTransactions: action.payload, // update allTransactions with the payload
-        // allTransactions: state.allTransactions, // update allTransactions with the payload
-        // filteredTransactions: state.filteredTransactions,
-      };
+      // Check if action.payload is an array before processing
+      if (Array.isArray(action.payload)) {
+        // Calculate total income and expense from the payload
+        const totalIncome = action.payload.reduce((total, transaction) => {
+          return transaction.type === "income"
+            ? total + parseFloat(transaction.amount)
+            : total;
+        }, 0);
+
+        const totalExpense = action.payload.reduce((total, transaction) => {
+          return transaction.type === "expense"
+            ? total + parseFloat(transaction.amount)
+            : total;
+        }, 0);
+
+        // Calculate current balance
+        const currentBalance = totalIncome - totalExpense;
+
+        return {
+          ...state,
+          allTransactions: action.payload,
+          filteredTransactions: action.payload,
+          currentBalance: currentBalance,
+          totalIncome: totalIncome,
+          totalExpense: totalExpense,
+        };
+      } else {
+        // If action.payload is not an array, return the current state
+        console.error("Payload is not an array:", action.payload);
+        return state;
+      }
     case SHOW_ALL_TRANSACTIONS:
       return {
         ...state,

@@ -21,21 +21,29 @@ import {
   deleteTransactions,
 } from "../actions/transactionAction";
 import Container from "react-bootstrap/Container";
+import { CurrentBalance } from "./CurrentBalance";
 
 // component that shows all transaction
 export const TableComponent = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const user = {
+    id: localStorage.getItem("userId"),
+    name: localStorage.getItem("userName"),
+  };
   // load all the transactions initially when the component is mounted
   useEffect(() => {
     console.log("First call for data when component was mounted");
-    dispatch(getAllTransactions());
+    dispatch(getAllTransactions(user.id));
   }, []);
 
   // subscribe the component to the store and pass to it the latest state.
   const tsStore = useSelector(
     (state) => state.transactions.filteredTransactions,
+  );
+  // get the states form the store
+  const currentBalance = useSelector(
+    (state) => state.transactions.currentBalance,
   );
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -97,9 +105,6 @@ export const TableComponent = () => {
     navigate("/transaction", { state: { transaction } });
   };
 
-  // const deleteSelectedHandler = () => {
-  //   dispatch(deleteTransactions(selectedRows));
-  // };
   const deleteSelectedHandler = () => {
     if (selectedRows.length === 0) {
       setPopoverText("Please select at least one transaction to delete.");
@@ -125,6 +130,9 @@ export const TableComponent = () => {
   return (
     <Container>
       <h2>Transaction Table</h2>
+      <ul>Hello {user.name}</ul>
+      <CurrentBalance currentBalance={currentBalance} />
+
       {/****buttons****/}
       <div className="d-flex justify-content-center ">
         <ButtonGroup>

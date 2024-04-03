@@ -5,6 +5,7 @@ import { getAllTransactions } from "../actions/transactionAction";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Card from "react-bootstrap/Card";
+import { CurrentBalance } from "./CurrentBalance";
 
 export const DashboardComponent = () => {
   const dispatch = useDispatch();
@@ -21,27 +22,12 @@ export const DashboardComponent = () => {
     dispatch(getAllTransactions(user.id));
   }, []);
 
-  // subscribe the component to the store and pass to it the latest state.
-  const tsStore = useSelector(
-    (state) => state.transactions.filteredTransactions,
+  // get the states form the store
+  const currentBalance = useSelector(
+    (state) => state.transactions.currentBalance,
   );
-  let income = tsStore.reduce((total, transaction) => {
-    if (transaction.type === "income") {
-      return total + transaction.amount;
-    } else {
-      return total;
-    }
-  }, 0);
-
-  let expense = tsStore.reduce((total, transaction) => {
-    if (transaction.type === "expense") {
-      return total + transaction.amount;
-    } else {
-      return total;
-    }
-  }, 0);
-
-  let currentBalance = income - expense;
+  const totalIncome = useSelector((state) => state.transactions.totalIncome);
+  const totalExpense = useSelector((state) => state.transactions.totalExpense);
 
   return (
     <>
@@ -51,19 +37,11 @@ export const DashboardComponent = () => {
           <Card.Header as="h5">Hello {user.name}</Card.Header>
           <Card.Body>
             <Card.Title>
-              <ul
-                className={
-                  currentBalance >= 0
-                    ? "text-success fw-bold"
-                    : "text-danger fw-bold"
-                }
-              >
-                Current Balance: {currentBalance} ₪
-              </ul>
+              <CurrentBalance currentBalance={currentBalance} />
             </Card.Title>
             <Card.Text>
-              <ul className="text-success">Total Incomes: {income} ₪</ul>
-              <ul className="text-danger">Total Expenses: {expense} ₪</ul>
+              <ul className="text-success">Total Incomes: {totalIncome} ₪</ul>
+              <ul className="text-danger">Total Expenses: {totalExpense} ₪</ul>
             </Card.Text>
             <Button
               className="ms-5"
