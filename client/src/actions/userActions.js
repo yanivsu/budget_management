@@ -8,7 +8,6 @@ export const checkCredentials =
   (user_name, user_password) => async (dispatch) => {
     try {
       console.log("Checking user credentials");
-      // console.log(user_name, user_password);
       const response = await axios.post(API_URL + "login", {
         user_name,
         user_password,
@@ -16,8 +15,11 @@ export const checkCredentials =
       console.log(response.data);
       dispatch({
         type: CHECK_CREDENTIALS,
-        payload: response.data,
+        payload: response.data.auth,
       });
+      console.log(response.data.auth);
+      localStorage.setItem("userName", response.data.auth.userName);
+      localStorage.setItem("userId", response.data.auth.userId);
     } catch (error) {
       // log the server's error response
       console.error(error.response.data);
