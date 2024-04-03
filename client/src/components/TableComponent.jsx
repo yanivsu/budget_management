@@ -71,7 +71,6 @@ export const TableComponent = () => {
   const [showPopover, setShowPopover] = useState(false);
   const [showDeletePopover, setShowDeletePopover] = useState(false);
 
-  // TODO dont show 2 popover together
   useEffect(() => {
     if (selectedRows.length === 1) {
       setShowDeletePopover(false);

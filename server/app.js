@@ -14,7 +14,6 @@ app.options("*", cors());
 app.use("/user", userRoutes);
 app.use("/budget", budgetRoutes);
 
-// TODO fix the env
 console.log(`Listening on port:${process.env.PORT}`);
 app.listen(process.env.PORT);
 // console.log(`USER : ${process.env.USER}`);

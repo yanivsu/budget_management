@@ -3,7 +3,6 @@ const UserService = require("../services/user.service");
 //   try {
 //     console.log("entered controller");
 //     const auth = await UserService.loginService(req.body);
-//     // TODO use the userName in the front
 //     // res.cookie('token', token, {
 //     //   domain: domain,
 //     //   path: '/',

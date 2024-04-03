@@ -139,7 +139,6 @@ exports.updateTransaction = (transactionId, name, amount, type, date) => {
 
 // get all transactions
 
-// TODO fix get all incomed and expenses
 // get all income transactions
 // exports.getAllIncomes = async () => {
 //   return new Promise((resolve, reject) => {

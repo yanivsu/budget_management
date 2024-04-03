@@ -79,7 +79,6 @@ export default function TransactionFormComponent({
   //     setValue(key, "");
   //   });
   // };
-  // TODO when submiting update, form refresh and nothing happens
 
   const goBack = () => navigate("/table");
   // TODO cant add data in hebrew?!
