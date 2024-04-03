@@ -8,10 +8,10 @@ const initialUserState = {
 export const userReducer = (state = initialUserState, action) => {
   switch (action.type) {
     case CHECK_CREDENTIALS:
-      console.log("log from reducer: " + action.payload.auth.status);
+      console.log("log from reducer: " + action.payload.status);
       return {
         ...state,
-        isValidUser: action.payload.auth.status,
+        isValidUser: action.payload.status,
       };
     case "LOGIN_ERROR": // handle login error action
       return {
