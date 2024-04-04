@@ -16,7 +16,9 @@ export const SHOW_EXPENSE = "showExpense";
 // api call get all transactions from server
 export const getAllTransactions = (userId) => async (dispatch) => {
   try {
-    const response = await axios.get(API_URL + "getAllTransactions/" + userId);
+    const response = await axios.get(API_URL + "getAllTransactions/" + userId, {
+      // withCredentials: true,
+    });
     dispatch({
       type: GET_ALL_TRANSACTIONS,
       payload: response.data.transactions,
@@ -33,7 +35,11 @@ export const addTransaction = (newTransaction, userId) => async (dispatch) => {
     const response = await axios.post(
       API_URL + "createTransaction",
       newTransaction,
+      // {
+      //   withCredentials: true,
+      // },
     );
+
     dispatch({
       type: ADD_TRANSACTION,
       payload: response.data.transaction,
@@ -52,6 +58,7 @@ export const deleteTransactions =
     try {
       const response = await axios.delete(API_URL + "deleteTransaction", {
         data: { transactionIds },
+        // withCredentials: true,
       });
       dispatch({
         type: DELETE_TRANSACTIONS,
@@ -70,7 +77,11 @@ export const updateTransaction =
       const response = await axios.put(
         API_URL + "updateTransaction",
         newTransaction,
+        // {
+        //   withCredentials: true,
+        // },
       );
+
       console.log(response.data);
       dispatch({
         type: UPDATE_TRANSACTION,

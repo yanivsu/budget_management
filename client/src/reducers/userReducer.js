@@ -8,7 +8,6 @@ const initialUserState = {
 export const userReducer = (state = initialUserState, action) => {
   switch (action.type) {
     case CHECK_CREDENTIALS:
-      console.log("log from reducer: " + action.payload.status);
       return {
         ...state,
         isValidUser: action.payload.status,

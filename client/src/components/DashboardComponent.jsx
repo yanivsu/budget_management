@@ -37,12 +37,12 @@ export const DashboardComponent = () => {
             <Card.Title>
               <CurrentBalance currentBalance={currentBalance} />
             </Card.Title>
-            <Card.Text className="ms-5">
+            <div className="ms-5">
               <div className="text-success">Total Incomes: {totalIncome} ₪</div>
               <div className="text-danger">
                 Total Expenses: {totalExpense} ₪
               </div>
-            </Card.Text>
+            </div>
             <Button
               className="ms-5"
               variant="outline-primary"

@@ -1,26 +1,13 @@
 const jwt = require("jsonwebtoken");
 
 const authenticateToken = (req, res, next) => {
-  // Get the token from the cookies
-  const token = req.cookies.token;
+  const token = req.cookies.token; // Assuming the token is sent in a cookie
+  if (token == null) return res.sendStatus(401); // if there's no token, return 401 Unauthorized
 
-  // Check if the token exists
-  if (!token) {
-    return res.status(403).send({ message: "User not authenticated" });
-  }
-
-  // Verify the token
-  jwt.verify(token, "your_secret_key", (err, user) => {
-    if (err) {
-      return res.status(403).send({ message: "User not authenticated" });
-    }
-
-    // Save the user in the request object
+  jwt.verify(token, process.env.SECRETKEY, (err, user) => {
+    if (err) return res.sendStatus(403); // if the token is not valid, return 403 Forbidden
     req.user = user;
-
-    // Call the next middleware function
-    next();
+    next(); // if the token is valid, proceed to the next middleware/route handler
   });
 };
-
 module.exports = authenticateToken;

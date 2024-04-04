@@ -14,7 +14,6 @@ export const LoginComponent = () => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (isValidUser) {
-      console.log(isValidUser);
       navigate("/dashboard"); // navigate to home after login
       setLoading(false);
     }

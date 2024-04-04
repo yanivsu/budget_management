@@ -1,4 +1,3 @@
-const UserService = require("../services/user.service");
 // exports.login = async (req, res, next) => {
 //   try {
 //     console.log("entered controller");
@@ -17,6 +16,9 @@ const UserService = require("../services/user.service");
 //     return err;
 //   }
 // };
+// require("dotenv").config();
+
+const UserService = require("../services/user.service");
 
 const jwt = require("jsonwebtoken");
 
@@ -29,7 +31,7 @@ exports.login = async (req, res, next) => {
       // Create a token
       const token = jwt.sign(
         { userId: auth.userId, userName: auth.userName },
-        "process.env.SECRETKEY",
+        process.env.SECRETKEY, // Use the environment variable directly
         { expiresIn: "1h" },
       );
 
@@ -39,11 +41,12 @@ exports.login = async (req, res, next) => {
       // Send the response
       return res.status(200).send({ auth });
     } else {
-      throw new Error("username or password are incorrect!");
+      const error = new Error("username or password are incorrect!");
+      error.status = 401; // Set the status code to 401 Unauthorized
+      next(error);
     }
   } catch (err) {
-    res.status(400).json({ Error: err.message });
+    res.status(500).json({ Error: err.message });
     next(err);
-    return err;
   }
 };

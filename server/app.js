@@ -1,14 +1,25 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
-app.use(express.json());
 const budgetRoutes = require("./routes/budget.route");
 const userRoutes = require("./routes/user.route");
 const cors = require("cors");
-require("dotenv").config();
+const cookieParser = require("cookie-parser");
+
+const app = express();
+
+app.use(express.json());
+app.use(cookieParser());
 // enable cors
 app.use(cors());
 app.options("*", cors());
+
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000/", // Replace with your client's domain
+//     // credentials: true,
+//   }),
+// );
+// app.options("*", cors());
 
 // setup the express server router
 app.use("/user", userRoutes);
