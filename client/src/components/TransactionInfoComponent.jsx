@@ -39,13 +39,14 @@ export const TransactionInfoComponent = () => {
 
   // delete handler
   const deleteSelectedHandler = () => {
+    console.log(transaction);
+
     dispatch(deleteTransactions([transactionId], userId));
-    setTimeout(() => {
-      setLoading(true);
-      navigate("/table");
-      setLoading(false);
-    }, 1500); // 1500ms delay
+    navigate("/table");
   };
+  if (!transaction) {
+    return <div></div>;
+  }
 
   return (
     <>
