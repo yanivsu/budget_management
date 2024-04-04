@@ -6,20 +6,20 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-
 app.use(express.json());
-app.use(cookieParser());
-// enable cors
-app.use(cors());
-app.options("*", cors());
 
-// app.use(
-//   cors({
-//     origin: "http://localhost:3000/", // Replace with your client's domain
-//     // credentials: true,
-//   }),
-// );
-// app.options("*", cors());
+app.use(cookieParser());
+// configure cors
+const corsOptions = {
+  origin: function (origin, callback) {
+    callback(null, true);
+  },
+  credentials: true,
+};
+
+// enable cors
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // setup the express server router
 app.use("/user", userRoutes);
@@ -27,7 +27,3 @@ app.use("/budget", budgetRoutes);
 
 console.log(`Listening on port:${process.env.PORT}`);
 app.listen(process.env.PORT);
-// console.log(`USER : ${process.env.USER}`);
-
-// console.log(`Listening on port:8005`);
-// app.listen(8005);

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import axios from "axios"; // or use fetch
+import axios from "axios";
+const API_URL = "http://localhost:8005/budget";
 
+/*
+ * an authentication middleware that responsible to authanticate each route that
+ * is being used in the application
+ * it checks if there is a token and send it for verification in the server.
+ * if valid, then return the component to render
+ * */
 const withAuth = (Component) => {
   const AuthRoute = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -9,8 +16,7 @@ const withAuth = (Component) => {
     useEffect(() => {
       const verifyToken = async () => {
         try {
-          // Replace '/verifyToken' with your actual endpoint that verifies the token
-          const response = await axios.get("/verifyToken", {
+          const response = await axios.get(API_URL + "/verifyToken", {
             withCredentials: true,
           });
           if (response.status === 200) {
@@ -24,14 +30,15 @@ const withAuth = (Component) => {
       verifyToken();
     }, []);
 
+    // renders "   " between pages for smooth operation
     if (isAuthenticated === null) {
-      return <div>Loading...</div>; // or some loading spinner
+      return <div></div>;
     }
 
     return isAuthenticated ? <Component /> : <Navigate to="/login" />;
   };
-
-  return AuthRoute;
+  // Invoke AuthRoute before returning it
+  return <AuthRoute />;
 };
 
 export default withAuth;

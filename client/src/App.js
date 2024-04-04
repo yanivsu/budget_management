@@ -6,36 +6,26 @@ import { TableComponent } from "./components/TableComponent";
 import TransactionFormComponent from "./components/TransactionFormComponent";
 import { LoginComponent } from "./components/LoginComponent";
 import { TransactionInfoComponent } from "./components/TransactionInfoComponent";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import NavigationBar from "./components/NavigationBar";
-
-<FontAwesomeIcon icon="fa-solid fa-pen-to-square" />;
-
-// TODO create a logo for the app
 
 function App() {
   return (
     <>
       <Router>
-        <NavigationBar username="" />
+        {/*<NavigationBar username="" />*/}
+        {/* all routs are protected with an withAuth middleware for authentication*/}
         <Routes>
           <Route path="/" element={<LoginComponent />} />
           <Route path="/login" element={<LoginComponent />} />
-          {/*<Route path="/dashboard" element={withAuth(DashboardComponent)} />*/}
-          <Route path="/dashboard" element={<DashboardComponent />} />
-          {/*<Route path="/table" element={withAuth(TableComponent)} />*/}
-          <Route path="/table" element={<TableComponent />} />
-          {/*route gets the transaction id parameter*/}
+          <Route path="/dashboard" element={withAuth(DashboardComponent)} />
+          <Route path="/table" element={withAuth(TableComponent)} />
+          {/* nested route for the transaction info*/}
           <Route
             path="/transactionInfo/:transactionId"
-            // element={withAuth(TransactionInfoComponent)}
-            element={<TransactionInfoComponent />}
+            element={withAuth(TransactionInfoComponent)}
           />
           <Route
             path="/transaction"
-            // element={withAuth(TransactionFormComponent)}
-            element={<TransactionFormComponent />}
+            element={withAuth(TransactionFormComponent)}
           />
         </Routes>
       </Router>
