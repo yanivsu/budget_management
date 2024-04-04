@@ -3,6 +3,9 @@ const httpStatus = require("http-status");
 const pick = require("../utils/pick");
 const ApiError = require("../utils/ApiError");
 
+// create a validate middleware that validate incoming api calls
+// using Joi to validate request parameters, queries, and bodies against a defined schema,
+// assigning the validated values to the request object.
 const validate = (schema) => (req, res, next) => {
   const validSchema = pick(schema, ["params", "query", "body"]);
   const object = pick(req, Object.keys(validSchema));

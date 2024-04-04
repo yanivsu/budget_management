@@ -7,11 +7,12 @@ import Container from "react-bootstrap/Container";
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { deleteTransactions } from "../actions/transactionAction";
 
-// subscribe the component to the store and pass to it the latest state.
+/*
+ * info component that shows the details of a selected transaction
+ * allows also to update and delete directly from it
+ * */
 export const TransactionInfoComponent = () => {
   const { transactionId } = useParams();
   // subscribe to the store and get the state
@@ -22,8 +23,8 @@ export const TransactionInfoComponent = () => {
   const transaction = tsStore.find(
     (transaction) => transaction.transaction_id === parseInt(transactionId),
   );
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const userId = localStorage.getItem("userId");
@@ -31,11 +32,13 @@ export const TransactionInfoComponent = () => {
   const goBack = () => navigate("/table");
 
   /*** Handlers ***/
+  // update handler
   const updateTransactionHandler = () => {
     navigate("/transaction", { state: { transaction } });
   };
+
+  // delete handler
   const deleteSelectedHandler = () => {
-    console.log();
     dispatch(deleteTransactions([transactionId], userId));
     setTimeout(() => {
       setLoading(true);
@@ -50,7 +53,6 @@ export const TransactionInfoComponent = () => {
         className="d-flex flex-column justify-content-center align-items-center"
         style={{ minHeight: "100vh" }}
       >
-        {/*<FontAwesomeIcon icon={faPenToSquare} />*/}
         <Row className="mb-3">
           <h2>Transaction Information</h2>
         </Row>

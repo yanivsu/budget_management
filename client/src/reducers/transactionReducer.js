@@ -6,7 +6,11 @@ import {
   SHOW_ALL_TRANSACTIONS,
   DELETE_TRANSACTIONS,
 } from "../actions/transactionAction";
-
+/*
+ * reducers that do all the work behind the scenes for managing the redux states
+ * the reducer called with defferent case, after an api call has been made to modify the state and
+ * present the wanted data to the user
+ * */
 const initialState = {
   allTransactions: [],
   filteredTransactions: [],
@@ -15,7 +19,7 @@ const initialState = {
   totalExpense: 0,
 };
 
-// Helper function to calculate financials
+// Helper function to calculate current balance total expense/income
 const calculateFinancials = (transactions) => {
   const totalIncome = transactions.reduce((total, transaction) => {
     return transaction && transaction.type === "income"
@@ -52,17 +56,20 @@ export const transactionReducer = (state = initialState, action) => {
         };
       } else {
         // If action.payload is not an array, return the current state
-        console.error("Payload is not an array:", action.payload);
         return state;
       }
 
     case SHOW_ALL_TRANSACTIONS:
       return {
         ...state,
-        allTransactions: state.allTransactions, // Assuming action.payload contains all transactions
-        filteredTransactions: state.allTransactions, // Show all without filter
+        // assuming action.payload contains all transactions
+        allTransactions: state.allTransactions,
+        // show all without filter
+        filteredTransactions: state.allTransactions,
       };
 
+    // after an add transaction succeeded, update the allTransaction
+    // to include the new added transaction
     case ADD_TRANSACTION:
       const newTransaction = action.payload;
       const updatedTransactions = [...state.allTransactions, newTransaction];
@@ -82,6 +89,7 @@ export const transactionReducer = (state = initialState, action) => {
         totalExpense: totalExpense,
       };
 
+    // show all income filter, update the filters transaction to show only income
     case SHOW_INCOME:
       return {
         ...state,
@@ -92,6 +100,7 @@ export const transactionReducer = (state = initialState, action) => {
         ),
       };
 
+    // show all expenses filter, update the filters transaction to show only expenses
     case SHOW_EXPENSE:
       return {
         ...state,
@@ -101,6 +110,8 @@ export const transactionReducer = (state = initialState, action) => {
         ),
       };
 
+    //  updates the allTransaction to show all data and exclude the
+    // deleted transactions
     case DELETE_TRANSACTIONS:
       const updatedTransactionsDelete = state.allTransactions.filter(
         (transaction) => !action.payload.includes(transaction.transaction_id),
@@ -109,7 +120,7 @@ export const transactionReducer = (state = initialState, action) => {
       const { totalIncomeDelete, totalExpenseDelete, currentBalanceDelete } =
         calculateFinancials(updatedTransactionsDelete);
 
-      // Update filteredTransactions based on the current filter
+      // update filteredTransactions based on the current filter
       const updatedFilteredTransactions =
         state.currentFilter === "all"
           ? updatedTransactionsDelete

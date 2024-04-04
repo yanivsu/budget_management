@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+// creating connection to the db using .env parameters
 const db = mysql.createConnection({
   host: process.env.HOST,
   user: process.env.USER,

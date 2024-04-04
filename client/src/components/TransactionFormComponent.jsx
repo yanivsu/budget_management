@@ -9,6 +9,14 @@ import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 
+/*
+ * form uses for updating and ad new form, depends on the location state it receives
+ * if it's an update, that the submit handler dispatch the update command
+ * and if it's an add transaction that the submit handler dispatch the add command
+ * also the submit/update  button & title changes reletivly
+ * in add mode - the inputs would be empty for the user to fill them.
+ * in update mode - the inputs would have the data that belongs to the specific transaction id
+ * */
 export default function TransactionFormComponent({
   transaction: initialTransaction = null,
 }) {
@@ -22,6 +30,7 @@ export default function TransactionFormComponent({
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
+  // use form
   const {
     register,
     handleSubmit,
@@ -44,13 +53,13 @@ export default function TransactionFormComponent({
   }, [transaction, setValue]);
   const clearForm = () => reset();
 
+  // submit function
   const onSubmit = async (data) => {
     setLoading(true);
     // get the userId and sent it with the transaction data
     const userId = localStorage.getItem("userId");
     const transactionData = { ...data, user_id: userId };
-    console.log(data);
-
+    // checks the form mode: updating transaction / add new transaction
     if (isUpdating) {
       await dispatch(updateTransaction(transactionData, userId))
         .then(() => {
@@ -74,14 +83,8 @@ export default function TransactionFormComponent({
     }
     clearForm();
   };
-  // const clearForm = () => {
-  //   Object.keys(transaction).forEach((key) => {
-  //     setValue(key, "");
-  //   });
-  // };
 
   const goBack = () => navigate("/table");
-  // TODO cant add data in hebrew?!
   return (
     <Container
       className="d-flex flex-column justify-content-center align-items-center"
@@ -92,7 +95,6 @@ export default function TransactionFormComponent({
       </Row>
       <Form
         onSubmit={handleSubmit(onSubmit)}
-        // onSubmit={isUpdating ? updateHandler : handleSubmit(onSubmit)}
         style={{ width: "100%", maxWidth: "400px" }}
       >
         <Form.Group controlId="transaction_name">
@@ -143,7 +145,6 @@ export default function TransactionFormComponent({
           </Form.Control.Feedback>
         </Form.Group>
 
-        {/*TODO add arrow dropdown*/}
         <Form.Group controlId="type">
           <Form.Label>Type:</Form.Label>
           <Form.Control as="select" {...register("type", { required: true })}>
@@ -161,7 +162,6 @@ export default function TransactionFormComponent({
             variant="outline-primary"
             size="sm"
             type="button"
-            // onClick={navigate("/table")}
             onClick={goBack}
           >
             Go back

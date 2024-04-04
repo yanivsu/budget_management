@@ -1,6 +1,7 @@
 const db = require("../config/db");
 const bcrypt = require("bcrypt");
 
+// user model
 exports.userAuth = async (user) => {
   const { user_name, user_password } = user;
   return new Promise((resolve, reject) => {
@@ -20,7 +21,6 @@ exports.userAuth = async (user) => {
           if (await bcrypt.compare(user_password, hashedPass)) {
             resolve({ status: true, userId: userId, userName: user_name }); // User found and password match
           } else {
-            console.log("failed");
             resolve({ status: false }); // User found but password doesn't match
           }
         } else {

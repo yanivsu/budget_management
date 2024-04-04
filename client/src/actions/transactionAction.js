@@ -13,11 +13,11 @@ export const SHOW_EXPENSE = "showExpense";
 
 // Action creators
 
-// api call get all transactions from server
+// get call to get all transactions from server
 export const getAllTransactions = (userId) => async (dispatch) => {
   try {
     const response = await axios.get(API_URL + "getAllTransactions/" + userId, {
-      // withCredentials: true,
+      withCredentials: true,
     });
     dispatch({
       type: GET_ALL_TRANSACTIONS,
@@ -29,15 +29,15 @@ export const getAllTransactions = (userId) => async (dispatch) => {
   }
 };
 
-// api post call add a new transaction to the db through the server
+// post call to add a new transaction to the db through the server
 export const addTransaction = (newTransaction, userId) => async (dispatch) => {
   try {
     const response = await axios.post(
       API_URL + "createTransaction",
       newTransaction,
-      // {
-      //   withCredentials: true,
-      // },
+      {
+        withCredentials: true,
+      },
     );
 
     dispatch({
@@ -51,14 +51,13 @@ export const addTransaction = (newTransaction, userId) => async (dispatch) => {
   }
 };
 
-// delete api call that sends with an array of selected transaction fo deletion
+// delete call that sends with an array of selected transaction fo deletion
 export const deleteTransactions =
   (transactionIds, userId) => async (dispatch) => {
-    console.log("Transactions to delete: ", transactionIds);
     try {
       const response = await axios.delete(API_URL + "deleteTransaction", {
         data: { transactionIds },
-        // withCredentials: true,
+        withCredentials: true,
       });
       dispatch({
         type: DELETE_TRANSACTIONS,
@@ -70,19 +69,18 @@ export const deleteTransactions =
     }
   };
 
+// update call to update a transaction using it's id
 export const updateTransaction =
   (newTransaction, userId) => async (dispatch) => {
-    console.log("transaction " + newTransaction);
     try {
       const response = await axios.put(
         API_URL + "updateTransaction",
         newTransaction,
-        // {
-        //   withCredentials: true,
-        // },
+        {
+          withCredentials: true,
+        },
       );
 
-      console.log(response.data);
       dispatch({
         type: UPDATE_TRANSACTION,
         payload: response.data.transaction,

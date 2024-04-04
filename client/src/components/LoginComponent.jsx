@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 import { checkCredentials } from "../actions/userActions";
-// TODO fix spinner when auth failed and show some message that it failed
+// login component using react-hook-form that dispatches the credentials and
+// notify the user if his credentials is wrong
 export const LoginComponent = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
@@ -27,7 +28,6 @@ export const LoginComponent = () => {
 
   const onSubmit = (data) => {
     setLoading(true);
-    // console.log(data);
     // dispatching the credentials to the action
     dispatch(checkCredentials(data.username, data.password));
     setTimeout(() => {}, 1500);

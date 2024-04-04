@@ -1,9 +1,6 @@
-// Import the Transaction model
-// const Transaction = require("../models/budgetModel.model");
-// Import the Budget Service
 const BudgetService = require("../services/budget.service");
 
-// Create new transaction
+// create new transaction controller
 exports.createTransaction = async (req, res, next) => {
   try {
     const transaction = req.body;
@@ -17,7 +14,7 @@ exports.createTransaction = async (req, res, next) => {
     return err;
   }
 };
-// Get all transaction Controller
+// get all transaction Controller
 exports.getAllTransactions = async (req, res, next) => {
   try {
     const userId = req.params.userId;
@@ -29,24 +26,21 @@ exports.getAllTransactions = async (req, res, next) => {
     return err;
   }
 };
-// Delete transaction by transaction ID
+// delete transaction by transaction ID controller
 exports.deleteTransactionsByIds = async (req, res, next) => {
   try {
     const transactionIds = req.body.transactionIds;
     const affectedRows =
       await BudgetService.deleteTransactionsByIdsService(transactionIds);
     if (affectedRows === 0) {
-      // No rows were deleted, so the transactionIds must not exist
+      // no rows were deleted, so the transactionIds must not exist
       res.status(404).json({ message: "Transactions not found" });
-      return;
     } else {
-      // The transactions were successfully deleted
-      res.status(200).json({
+      // the transactions were successfully deleted
+      return res.status(200).json({
         message: "Transactions successfully deleted",
         transactionIds: transactionIds,
       });
-
-      return;
     }
   } catch (err) {
     res.status(400).json({ Error: err.message });
@@ -55,21 +49,20 @@ exports.deleteTransactionsByIds = async (req, res, next) => {
   }
 };
 
-// Edit transaction by transaction ID
+// edit transaction by transaction ID controller
 exports.updateTransactionById = async (req, res, next) => {
   try {
     const transaction = req.body;
-
     const affectedRows =
       await BudgetService.updateTransactionByIdService(transaction);
     if (affectedRows === 0) {
-      // No rows were deleted, so the transactionIds must not exist
-      res.status(404).json({ message: "Transaction not found" });
-      return;
+      // no rows were deleted, so the transactionIds must not exist
+      return res.status(404).json({ message: "Transaction not found" });
     } else {
-      // The transactions were successfully deleted
-      res.status(200).json({ message: "Transactions successfully updated" });
-      return;
+      // the transactions were successfully deleted
+      return res
+        .status(200)
+        .json({ message: "Transactions successfully updated" });
     }
   } catch (err) {
     res.status(400).json({ Error: err.message });

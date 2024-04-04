@@ -1,5 +1,9 @@
 import { CHECK_CREDENTIALS } from "../actions/userActions";
 
+/*
+ * user reducer that updates id the credentials are valid
+ * */
+
 const initialUserState = {
   isValidUser: false,
   error: null,

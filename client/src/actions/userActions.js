@@ -7,17 +7,21 @@ export const CHECK_CREDENTIALS = "checkCredentials";
 export const checkCredentials =
   (user_name, user_password) => async (dispatch) => {
     try {
-      console.log("Checking user credentials");
-      const response = await axios.post(API_URL + "login", {
-        user_name,
-        user_password,
-      });
-      console.log(response.data);
+      const response = await axios.post(
+        API_URL + "login",
+        {
+          user_name,
+          user_password,
+        },
+        {
+          withCredentials: true,
+        },
+      );
       dispatch({
         type: CHECK_CREDENTIALS,
         payload: response.data.auth,
       });
-      console.log(response.data.auth);
+      // saves user details in local storage
       localStorage.setItem("userName", response.data.auth.userName);
       localStorage.setItem("userId", response.data.auth.userId);
     } catch (error) {

@@ -1,3 +1,6 @@
+//utility function that constructs a new object by selecting specific
+// properties from a source object.
+
 /**
  * Create an object composed of the picked object properties
  * @param {Object} object

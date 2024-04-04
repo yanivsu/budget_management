@@ -23,10 +23,12 @@ import {
 import Container from "react-bootstrap/Container";
 import { CurrentBalance } from "./CurrentBalance";
 
-// component that shows all transaction
+// component that shows all user's transaction
+// and allows him to add / delete / multiple delete / update transactions
 export const TableComponent = () => {
   let navigate = useNavigate();
   const dispatch = useDispatch();
+  // stores the user data in local storage
   const user = {
     id: localStorage.getItem("userId"),
     name: localStorage.getItem("userName"),
@@ -44,15 +46,7 @@ export const TableComponent = () => {
   const currentBalance = useSelector(
     (state) => state.transactions.currentBalance,
   );
-
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 8;
-  //
-  // const transactionsOnCurrentPage = tsStore.slice(
-  //   (currentPage - 1) * itemsPerPage,
-  //   currentPage * itemsPerPage,
-  // );
-
+  // pagination settings
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
@@ -67,7 +61,6 @@ export const TableComponent = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [radioValue, setRadioValue] = useState("1");
   const [popoverText, setPopoverText] = useState("");
-  // const [conditionForPopover, setConditionForPopover] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const [showDeletePopover, setShowDeletePopover] = useState(false);
 
@@ -80,12 +73,14 @@ export const TableComponent = () => {
     }
   }, [selectedRows]);
 
+  // radio settings
   const radios = [
     { name: "All", value: "1" },
     { name: "Income", value: "2" },
     { name: "Expense", value: "3" },
   ]; //
 
+  // popover setting while clicking buttons
   const renderPopover = (props) => (
     <Popover id="popover-basic" {...props}>
       <Popover.Body>{popoverText}</Popover.Body>
@@ -104,16 +99,21 @@ export const TableComponent = () => {
       dispatch({ type: SHOW_ALL_TRANSACTIONS });
     }
   };
+
   /**** Handlers ********/
+
+  // add transaction handler
   const addTransactionHandler = () => {
     navigate("/transaction");
   };
 
+  // update transaction handler
   const updateTransactionHandler = (transaction) => {
     navigate("/transaction", { state: { transaction } });
     setSelectedRows([]);
   };
 
+  // delete transaction handler
   const deleteSelectedHandler = () => {
     if (selectedRows.length === 0) {
       setPopoverText("Please select at least one transaction to delete.");
@@ -135,8 +135,6 @@ export const TableComponent = () => {
       }
     });
   };
-
-  /******* functions *******/
 
   return (
     <Container>
@@ -179,6 +177,7 @@ export const TableComponent = () => {
               Delete Selected Transactions
             </Button>
           </OverlayTrigger>
+
           {/*can edit only one selected transaction*/}
           <OverlayTrigger
             trigger="click"
@@ -191,14 +190,13 @@ export const TableComponent = () => {
               size="sm"
               onClick={() => {
                 if (selectedRows.length === 1) {
-                  // gets the transaction data from te store
+                  // gets the transaction data from the store
                   const transactionToEdit = tsStore.find(
                     (transaction) =>
                       transaction.transaction_id === selectedRows[0],
                   );
                   updateTransactionHandler(transactionToEdit);
                 } else {
-                  console.log("Please select exactly one transaction to edit.");
                   setShowPopover(true);
                   setPopoverText(
                     "Please select exactly one transaction to edit.",
@@ -207,7 +205,6 @@ export const TableComponent = () => {
                 }
               }}
             >
-              {" "}
               Edit Transaction
             </Button>
           </OverlayTrigger>
@@ -217,7 +214,7 @@ export const TableComponent = () => {
             size="sm"
             onClick={() => navigate("/dashboard")}
           >
-            Back to Dashboard{" "}
+            Back to Dashboard
           </Button>
         </ButtonGroup>
       </div>
@@ -275,15 +272,17 @@ export const TableComponent = () => {
             // {tsStore.map((transaction) => (
             <tr
               key={transaction.transaction_id}
-              // A click on the row would navigate to the info transaction component with the transaction_id in the url
+              // A click on the row would navigate to the info transaction
+              // component with the transaction_id in the url
 
               onClick={() =>
                 navigate(`/transactionInfo/${transaction.transaction_id}`)
               }
             >
               <td className="d-flex justify-content-center ">
-                {/*when clicking the checkbox it would select and prevent with event.stopPropagation();
-                                the parent element to activate the navigate to transaction info */}
+                {/* when clicking the checkbox it would select and prevent
+                with event.stopPropagation();
+                the parent element to activate the navigate to transaction info */}
                 <Form.Check
                   type="checkbox"
                   checked={selectedRows.includes(transaction.transaction_id)}

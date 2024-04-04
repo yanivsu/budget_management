@@ -1,3 +1,4 @@
+// a component that received a balance parameter and renders the current balance
 export const CurrentBalance = ({ currentBalance }) => {
   return (
     <>

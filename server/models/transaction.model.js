@@ -1,10 +1,7 @@
 const mysql = require("mysql");
-// Import the database connection function
+// import the database connection function
 const db = require("../config/db");
 
-// Call the function to get the connection object
-
-// authenticate user
 // get all user's transactions
 exports.getAllTransactions = async (userId) => {
   return new Promise((resolve, reject) => {
@@ -32,13 +29,11 @@ exports.createNewTransaction = async (transaction) => {
       if (err) {
         console.log(err);
       }
-      // else {
-      //   console.log(res);
-      // }
     },
   );
 };
 
+// delete transaction 1 or more
 exports.deleteTransactionsByIds = (transaction_ids) => {
   return new Promise((resolve, reject) => {
     const sql = `DELETE FROM transactions WHERE transaction_id IN (?)`;
@@ -48,7 +43,7 @@ exports.deleteTransactionsByIds = (transaction_ids) => {
         reject(err);
       } else {
         console.log(result.message);
-        resolve(result.affectedRows); // resolve with affectedRows
+        resolve(result.affectedRows);
       }
     });
   });
@@ -56,14 +51,27 @@ exports.deleteTransactionsByIds = (transaction_ids) => {
 
 // updates a transaction only if id was found and the rest of the parameters are optional
 // build a sql query only with the parameters that are provided by the update function
-exports.updateTransaction = (transactionId, name, amount, type, date) => {
+exports.updateTransaction = (transaction) => {
+  const {
+    transaction_id: transactionId,
+    transaction_name,
+    amount,
+    type,
+    date,
+    transaction_details,
+  } = transaction;
+
   return new Promise((resolve, reject) => {
     let updates = [];
     let params = [];
-
-    if (name !== undefined && name !== null) {
+    // check the id, if not valid throw error
+    if (transactionId === undefined || transactionId === null) {
+      throw new Error("invalid transaction id");
+    }
+    // check the rest of the parameters
+    if (transaction_name !== undefined && transaction_name !== null) {
       updates.push("transaction_name = ?");
-      params.push(name);
+      params.push(transaction_name);
     }
     if (amount !== undefined && amount !== null) {
       updates.push("amount = ?");
@@ -77,103 +85,23 @@ exports.updateTransaction = (transactionId, name, amount, type, date) => {
       updates.push("date = ?");
       params.push(date);
     }
+    if (transaction_details !== undefined && transaction_details !== null) {
+      updates.push("transaction_details = ?");
+      params.push(transaction_details);
+    }
+
     // construct the query with the provide parameters
     let sql = `UPDATE transactions SET ${updates.join(", ")} WHERE transaction_id = ?`;
     params.push(transactionId);
-
     db.query(sql, params, (err, result) => {
       if (err) {
         console.log(err);
         reject(err);
       } else {
         console.log(result.message);
-        resolve(result); // resolve with the result of the UPDATE operation
+        // resolve with the result of the UPDATE operation
+        resolve(result);
       }
     });
   });
 };
-
-//
-// const Sequelize = require('sequelize');
-// const sequelize = new Sequelize('database', 'username', 'password', {
-//   host: 'localhost',
-//   dialect: 'mysql'
-// });
-//
-// const Transaction = sequelize.define('transaction', {
-//   type: {
-//     type: Sequelize.STRING
-//   },
-//   amount: {
-//     type: Sequelize.FLOAT
-//   },
-//   date: {
-//     type: Sequelize.DATE
-//   },
-//   transaction_name: {
-//     type: Sequelize.STRING
-//   }
-// });
-//
-// Transaction.sync()
-//     .then(() => {
-//       console.log('Transaction model synced with database');
-//     })
-//     .catch(err => {
-//       console.error('Unable to sync transaction model:', err);
-//     });
-//
-// module.exports = Transaction;
-
-// exports.getAllTransactions = async () => {
-//     const sql = 'SELECT * FROM transactions';
-//     db.query(sql, (err, results) => {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log(results);
-//             return results
-//         }
-//     });
-// }
-
-// get all transactions
-
-// get all income transactions
-// exports.getAllIncomes = async () => {
-//   return new Promise((resolve, reject) => {
-//     const sql = 'SELECT * FROM transactions WHERE type = "income"';
-//     db.query(sql, (err, results) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         resolve(results);
-//       }
-//     });
-//   });
-// };
-// // get all expense transactions
-//
-// exports.getAllExspenses = async () => {
-//   return new Promise((resolve, reject) => {
-//     const sql = 'SELECT * FROM transactions WHERE type = "expense"';
-//     db.query(sql, (err, results) => {
-//       if (err) {
-//         reject(err);
-//       } else {
-//         resolve(results);
-//       }
-//     });
-//   });
-// };
-
-// const Transaction = {
-//     create: (transaction, callback) => {
-//         const {transaction_name, amount, type, date} = transaction;
-//         const query = 'INSERT INTO Transactions (transaction_name,amount, type, date) VALUES (?, ?, ?, ?)';
-//         db.query(query, [transaction_name, amount, type, date], callback);
-//     },
-//     // Add other methods as needed (e.g., find, update, delete)
-// };
-//
-// module.exports = Transaction;
