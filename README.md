@@ -1,4 +1,4 @@
-# Budget App
+# Budget Manager App
 
 This is a full stack application that allows users to perform Create, Read, Update, and Delete (CRUD) operations on transactions.
 
