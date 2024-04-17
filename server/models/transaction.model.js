@@ -29,7 +29,7 @@ exports.createNewTransaction = async (transaction) => {
       if (err) {
         console.log(err);
       }
-    },
+    }
   );
 };
 
@@ -69,6 +69,7 @@ exports.updateTransaction = (transaction) => {
       throw new Error("invalid transaction id");
     }
     // check the rest of the parameters
+    // YANIV: Not the best option to do consider how to do it more readable....
     if (transaction_name !== undefined && transaction_name !== null) {
       updates.push("transaction_name = ?");
       params.push(transaction_name);
@@ -91,7 +92,9 @@ exports.updateTransaction = (transaction) => {
     }
 
     // construct the query with the provide parameters
-    let sql = `UPDATE transactions SET ${updates.join(", ")} WHERE transaction_id = ?`;
+    let sql = `UPDATE transactions SET ${updates.join(
+      ", "
+    )} WHERE transaction_id = ?`;
     params.push(transactionId);
     db.query(sql, params, (err, result) => {
       if (err) {

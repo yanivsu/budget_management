@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-const API_URL = "http://localhost:8005/budget";
+const API_URL = "http://localhost:8005/budget"; //YANIV: This thing should be in env folder or something , but for homework , it's good engouth
 
 /*
  * an authentication middleware that responsible to authanticate each route that

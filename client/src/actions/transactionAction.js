@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8005/budget/";
+const API_URL = "http://localhost:8005/budget/"; //YANIV: Same is here
 
 export const GET_ALL_TRANSACTIONS = "getAllTransactions";
 export const ADD_TRANSACTION = "addTransaction";
@@ -37,7 +37,7 @@ export const addTransaction = (newTransaction, userId) => async (dispatch) => {
       newTransaction,
       {
         withCredentials: true,
-      },
+      }
     );
 
     dispatch({
@@ -78,7 +78,7 @@ export const updateTransaction =
         newTransaction,
         {
           withCredentials: true,
-        },
+        }
       );
 
       dispatch({

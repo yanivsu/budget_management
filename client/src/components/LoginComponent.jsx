@@ -8,7 +8,7 @@ import { checkCredentials } from "../actions/userActions";
 // login component using react-hook-form that dispatches the credentials and
 // notify the user if his credentials is wrong
 export const LoginComponent = () => {
-  let navigate = useNavigate();
+  let navigate = useNavigate(); // YANIV: why not const ??
   const dispatch = useDispatch();
   const isValidUser = useSelector((state) => state.user.isValidUser);
   const error = useSelector((state) => state.user.error);
@@ -24,7 +24,7 @@ export const LoginComponent = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm(); // YANIV: This is call customHook and why is use. it can be question for you in interview....
 
   const onSubmit = (data) => {
     setLoading(true);
@@ -73,6 +73,15 @@ export const LoginComponent = () => {
         {error && <p className="text-danger">{error}</p>}
         <div className="d-flex justify-content-center">
           <Button className="mt-2 " variant="primary" size="sm" type="submit">
+            {/* YANIV: Consider to move it to sperate component and not on the code in this case 
+              for example: 
+               if (loading) {
+                  return <h1>Loading...</h1>;
+                }
+                if (error) {
+                  return <h1>Error...</h1>;
+                }
+            */}
             {loading && !error ? (
               <Spinner
                 className="me-2"

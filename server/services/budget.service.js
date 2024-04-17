@@ -8,7 +8,7 @@ module.exports.createTransactionService = async (transaction) => {
 
 // get all transaction
 module.exports.getAllTransactionsService = async (userId) => {
-  const transactions = await BudgetModel.getAllTransactions(userId);
+  const transactions = await BudgetModel.getAllTransactions(userId); // YANIV: where is catch ???
   if (!transactions) {
     throw new Error("No Transactions");
   } else {
@@ -19,13 +19,14 @@ module.exports.getAllTransactionsService = async (userId) => {
 
 // delete transaction by id
 module.exports.deleteTransactionsByIdsService = async (transactionIds) => {
-  const affectedRows =
-    await BudgetModel.deleteTransactionsByIds(transactionIds);
+  const affectedRows = await BudgetModel.deleteTransactionsByIds(
+    transactionIds
+  );
   return affectedRows;
 };
 
 // update transaction by id
 module.exports.updateTransactionByIdService = async (transaction) => {
-  const updatedTransaction = await BudgetModel.updateTransaction(transaction);
+  const updatedTransaction = await BudgetModel.updateTransaction(transaction); // YANIV: where is catch ???
   return updatedTransaction.affectedRows;
 };
